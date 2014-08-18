@@ -8,6 +8,7 @@ import org.gnubridge.core.bidding.rules.AlwaysPass;
 import org.gnubridge.core.bidding.rules.BiddingRule;
 import org.gnubridge.core.bidding.rules.Open1Color;
 import org.gnubridge.core.bidding.rules.Open1NT;
+import org.gnubridge.core.bidding.rules.Open2NT;
 import org.gnubridge.core.bidding.rules.Overcall1NT;
 import org.gnubridge.core.bidding.rules.OvercallSuit;
 import org.gnubridge.core.bidding.rules.Rebid1ColorOriginalSuit;
@@ -21,6 +22,7 @@ import org.gnubridge.core.bidding.rules.Respond1ColorWithNT;
 import org.gnubridge.core.bidding.rules.Respond1ColorWithNewSuit;
 import org.gnubridge.core.bidding.rules.Respond1NT;
 import org.gnubridge.core.bidding.rules.Respond2C;
+import org.gnubridge.core.bidding.rules.Respond2NT;
 import org.gnubridge.core.bidding.rules.RespondOvercallSuit;
 import org.gnubridge.core.bidding.rules.Strong2C;
 
@@ -31,9 +33,11 @@ public class BiddingAgent {
 	public BiddingAgent(Auctioneer a, Hand h) {
 		rules = new ArrayList<BiddingRule>();
 		rules.add(new Strong2C(a, h));
+		rules.add(new Open2NT(a, h));
 		rules.add(new Open1NT(a, h));
 		rules.add(new Open1Color(a, h));
 		rules.add(new Respond2C(a, h));
+		rules.add(new Respond2NT(a, h));
 		rules.add(new Respond1NT(a, h));
 		rules.add(new Respond1ColorRaiseMajorSuit(a, h));
 		rules.add(new Respond1ColorWithNewSuit(a, h));

@@ -5,8 +5,12 @@ import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.Pass;
 import org.gnubridge.core.bidding.PointCalculator;
-import org.gnubridge.core.deck.Suit;
+import org.gnubridge.core.deck.Clubs;
+import org.gnubridge.core.deck.Diamonds;
+import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
+import org.gnubridge.core.deck.Spades;
+import org.gnubridge.core.deck.Trump;
 
 public class Rebid1NT extends Rebid {
 
@@ -19,27 +23,33 @@ public class Rebid1NT extends Rebid {
 		Bid result = null;
 
 		Bid partnersBid = auction.getPartnersLastCall().getBid();
-		if (partnersBid.getTrump().isMajorSuit()) {
-			if (partnersBid.getValue() == 2) {
-				result = new Pass();
-			} else {
-				if (hand.getSuitLength((Suit) partnersBid.getTrump()) >= 3) {
-					result = new Bid(4, partnersBid.getTrump());
+		int rank = partnersBid.getValue();
+		Trump trump = partnersBid.getTrump();
+		if (rank == 2) {
+			if (trump.equals(Clubs.i())) {
+				if (hand.getSuitLength(Hearts.i()) == 4) {
+					result = new Bid(2, Hearts.i());
+				} else if (hand.getSuitLength(Spades.i()) == 4) {
+					result = new Bid(2, Spades.i());
 				} else {
-					result = new Bid(3, NoTrump.i());
+					result = new Bid(2, Diamonds.i());
 				}
-			}
-		} else if (NoTrump.i().equals(partnersBid.getTrump())) {
-			if (partnersBid.getValue() == 2) {
+			} else if (trump.isNoTrump()) {
 				PointCalculator pc = new PointCalculator(hand);
-				if (pc.getHighCardPoints() == 16) {
-					result = new Pass();
-				} else {
+				if (pc.getHighCardPoints() == 17) {
 					result = new Bid(3, NoTrump.i());
+				} else {
+					result = new Pass();
 				}
-			} else if (partnersBid.getValue() == 3) {
-				result = new Pass();
+			} else {
+				if (trump.equals(Diamonds.i())) {
+					result = new Bid(2, Hearts.i());
+				} else {
+					result = new Bid(2, Spades.i());
+				}
 			}
+		} else if (rank == 3) {
+			result = new Bid(3, NoTrump.i()); //TODO
 		}
 
 		return result;

@@ -12,11 +12,11 @@ import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Spades;
 
-public class Respond1NT extends Response {
+public class Respond2NT extends Response {
 
 	private final PointCalculator pc;
 
-	public Respond1NT(Auctioneer a, Hand h) {
+	public Respond2NT(Auctioneer a, Hand h) {
 		super(a, h);
 		pc = new PointCalculator(hand);
 	}
@@ -33,34 +33,20 @@ public class Respond1NT extends Response {
 		int points = pc.getCombinedPoints();
 		if (length > 3) {
 			if (length == 4) {
-				if (points >= 8) {
-					result = new Bid(2, Clubs.i());
+				if (points >= 5) {
+					result = new Bid(3, Clubs.i());
 				}
-			} else if (length >= 6 && points >= 10 && points <=13) {
-				result = new Bid(3, longer);
-				result.makeGameForcing();
-			} else {
-				if (longer.equals(Hearts.i())) {
-					result = new Bid(2, Diamonds.i());
-				} else {
-					result = new Bid(2, Hearts.i());
-				}
-			}
-		}
-		if (points >= 8 && points <= 10) {
-			if (hand.getSuitLength(Clubs.i()) >= 6) {
-				result = new Bid(3, Clubs.i());
-			} else if (hand.getSuitLength(Diamonds.i()) >= 6) {
+			} else if (longer.equals(Hearts.i())) {
 				result = new Bid(3, Diamonds.i());
+			} else {
+				result = new Bid(3, Hearts.i());
 			}
 		}
 		if (result == null) {
-			if (pc.getHighCardPoints() <= 7) {
-				result = new Pass();
-			} else if (pc.getHighCardPoints() <= 9) {
-				result = new Bid(2, NoTrump.i());
-			} else if (pc.getHighCardPoints() <= 15) {
+			if (pc.getHighCardPoints() >= 5) {
 				result = new Bid(3, NoTrump.i());
+			} else {
+				result = new Pass();
 			}
 		}
 		return result;
@@ -68,6 +54,6 @@ public class Respond1NT extends Response {
 
 	@Override
 	protected boolean applies() {
-		return super.applies() && new Bid(1, NoTrump.i()).equals(partnersOpeningBid);
+		return super.applies() && new Bid(2, NoTrump.i()).equals(partnersOpeningBid);
 	}
 }
