@@ -18,8 +18,9 @@ public class Overcall1NT extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		return auction.mayOvercall() && pc.getHighCardPoints() >= 16 && pc.getHighCardPoints() <= 18 && pc.isBalanced()
-				&& haveStopperInEnemySuit();
+		return ((auction.may2ndOvercall() && pc.getHighCardPoints() >= 15 && pc.getHighCardPoints() <= 18) ||
+				(auction.may4thOvercall() && pc.getHighCardPoints() >= 12 && pc.getHighCardPoints() <= 15))
+				&& pc.isBalanced() && haveStopperInEnemySuit();
 	}
 
 	@Override

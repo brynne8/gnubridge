@@ -155,7 +155,7 @@ public class Auctioneer {
 		return offset;
 	}
 
-	public boolean mayOvercall() {
+	public boolean may2ndOvercall() {
 		if (bidCount == 1) {
 			if (firstBid().is1Suit()) {
 				return true;
@@ -168,6 +168,18 @@ public class Auctioneer {
 			if (firstBid().isPass() && secondBid().isPass() && thirdBid().is1Suit()) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	public boolean may4thOvercall() {
+		if (bidCount < 3 || bidCount > 6) {
+			return false;
+		}
+		if (calls.get(bidCount - 1).isPass()
+				&& calls.get(bidCount - 2).isPass()
+				&& isOpening(calls.get(bidCount - 3))) {
+			return true;
 		}
 		return false;
 	}
@@ -201,8 +213,17 @@ public class Auctioneer {
 		}
 		boolean result = false;
 		int callOrder = getCallOrderZeroBased(bid);
-		if (callOrder == 1 && !PASS.equals(calls.get(0).getBid())) {
-			return true;
+		boolean them = true;
+		while (callOrder != 0) {
+			callOrder--;
+			Call call = calls.get(callOrder);
+			if (!call.isPass()) {
+				if (them && isOpening(call)) {
+					result = true;
+				}
+				break;
+			}
+			them = !them;
 		}
 		return result;
 	}
@@ -224,6 +245,9 @@ public class Auctioneer {
 
 	public boolean isOpening(Call callWithTrump) {
 		int index = getCallOrderZeroBased(callWithTrump.getBid());
+		if (index > 3) {
+			return false;
+		}
 		if (index == 0) {
 			return true;
 		}

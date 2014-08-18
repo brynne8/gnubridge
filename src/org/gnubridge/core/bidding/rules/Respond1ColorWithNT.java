@@ -31,10 +31,10 @@ public class Respond1ColorWithNT extends Response {
 	protected Bid prepareBid() {
 		if (calculator.getHighCardPoints() <= 10) {
 			return new Bid(1, NoTrump.i());
-		} else if (calculator.getHighCardPoints() >= 13 && calculator.getHighCardPoints() < 17
+		} else if (calculator.getHighCardPoints() >= 11 && calculator.getHighCardPoints() < 13
 				&& calculator.isBalanced()) {
 			return new Bid(2, NoTrump.i());
-		} else if (calculator.getHighCardPoints() >= 17 && calculator.getHighCardPoints() < 19
+		} else if (calculator.getHighCardPoints() >= 13 && calculator.getHighCardPoints() <= 15
 				&& calculator.isBalanced()) {
 			return new Bid(3, NoTrump.i());
 		} else {

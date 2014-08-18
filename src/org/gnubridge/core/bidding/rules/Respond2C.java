@@ -27,6 +27,7 @@ public class Respond2C extends Response {
 		if (pc.getHighCardPoints() >= 8) {
 			if (pc.isBalanced()) {
 				result = new Bid(2, NoTrump.i());
+				result.makeGameForcing();
 			} else {
 				Suit longest = null;
 				for (Suit color : mmlist) {
@@ -42,12 +43,13 @@ public class Respond2C extends Response {
 				if (longest != null) {
 					if (longest.isMajorSuit()) {
 						result = new Bid(2, longest);
+						result.makeGameForcing();
 					} else {
 						result = new Bid(3, longest);
+						result.makeGameForcing();
 					}
 				}
 			}
-			result.makeGameForcing();
 		} else {
 			result = new Bid(2, Diamonds.i());
 		}

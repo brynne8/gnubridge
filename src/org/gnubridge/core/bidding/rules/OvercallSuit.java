@@ -19,7 +19,7 @@ public class OvercallSuit extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		return this.auction.mayOvercall() && calculator.getCombinedPoints() >= 10;
+		return this.auction.may2ndOvercall() && calculator.getCombinedPoints() >= 10;
 	}
 
 	@Override

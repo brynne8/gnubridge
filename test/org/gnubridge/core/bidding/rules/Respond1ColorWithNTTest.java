@@ -37,7 +37,7 @@ public class Respond1ColorWithNTTest extends TestCase {
 		a.bid(new Pass());
 		Respond1ColorWithNT rule = new Respond1ColorWithNT(a, new Hand("K,J,3,2", "K,J,4,3", "K,9,8,6", "5,4,3"));
 
-		assertEquals(null, rule.getBid());
+		assertEquals(new Bid(2, NoTrump.i()), rule.getBid());
 	}
 
 	public void testDoesNotApplyBelow6() {
