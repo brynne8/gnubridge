@@ -21,6 +21,7 @@ public class Rebid1NT extends Rebid {
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
+		PointCalculator pc = new PointCalculator(hand);
 
 		Bid partnersBid = auction.getPartnersLastCall().getBid();
 		int rank = partnersBid.getValue();
@@ -35,7 +36,6 @@ public class Rebid1NT extends Rebid {
 					result = new Bid(2, Diamonds.i());
 				}
 			} else if (trump.isNoTrump()) {
-				PointCalculator pc = new PointCalculator(hand);
 				if (pc.getHighCardPoints() == 17) {
 					result = new Bid(3, NoTrump.i());
 				} else {
@@ -49,7 +49,17 @@ public class Rebid1NT extends Rebid {
 				}
 			}
 		} else if (rank == 3) {
-			result = new Bid(3, NoTrump.i()); //TODO
+			if (trump.isNoTrump()) {
+				result = new Pass();
+			} else if (hand.getSuitLength(trump.asSuit()) >= 2) {
+				if (trump.isMajorSuit()) {
+					result = new Bid(4, trump);
+				} else if (trump.isMinorSuit() && pc.getCombinedPoints() >= 17) {
+					result = new Bid(4, trump);
+				}
+			} else {
+				result = new Bid(3, NoTrump.i()); 
+			}
 		}
 
 		return result;
