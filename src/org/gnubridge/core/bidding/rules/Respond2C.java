@@ -5,8 +5,6 @@ import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.Diamonds;
-import org.gnubridge.core.deck.Hearts;
-import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Suit;
 import org.gnubridge.core.deck.Clubs;
 import org.gnubridge.core.deck.NoTrump;
@@ -14,7 +12,6 @@ import org.gnubridge.core.deck.NoTrump;
 public class Respond2C extends Response {
 
 	private final PointCalculator pc;
-	public static final Suit[] mmlist = { Hearts.i(), Spades.i(), Clubs.i(), Diamonds.i() };
 
 	public Respond2C(Auctioneer a, Hand h) {
 		super(a, h);
@@ -30,7 +27,7 @@ public class Respond2C extends Response {
 				result.makeGameForcing();
 			} else {
 				Suit longest = null;
-				for (Suit color : mmlist) {
+				for (Suit color : Suit.mmlist) {
 					if (hand.getSuitLength(color) >= 5) {
 						if (hand.AisStronger(color, longest)) {
 							longest = color;
