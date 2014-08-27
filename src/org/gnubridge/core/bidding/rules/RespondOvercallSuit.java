@@ -7,7 +7,6 @@ import java.util.List;
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
-import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.bidding.ResponseCalculator;
 import org.gnubridge.core.deck.Suit;
 import org.gnubridge.core.deck.Trump;
@@ -28,7 +27,7 @@ public class RespondOvercallSuit extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		PointCalculator calculator = new ResponseCalculator(hand, partnersOpeningBid);
+		ResponseCalculator calculator = new ResponseCalculator(hand, partnersOpeningBid);
 		if (hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 3) {
 			if (calculator.getCombinedPoints() >= 8 && calculator.getCombinedPoints() <= 11) {
 				return new Bid(partnersOpeningBid.getValue() + 1, partnersOpeningBid.getTrump());

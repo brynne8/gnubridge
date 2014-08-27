@@ -30,10 +30,7 @@ public class Open1Color extends BiddingRule {
 		Suit highest = null;
 		for (Suit color : Suit.list) {
 			if (hand.getSuitLength(color) >= 5) {
-				if (highest == null) {
-					highest = color;
-				} else if (hand.getSuitLength(color) > hand
-						.getSuitLength(highest)) {
+				if (hand.AisStronger(color, highest)) {
 					highest = color;
 				}
 			}

@@ -266,4 +266,8 @@ public class Hand {
 		return false;
 	}
 
+	public boolean AisStronger(Suit A, Suit B) {
+		return (B == null || getSuitLength(A) > getSuitLength(B));
+	}
+
 }

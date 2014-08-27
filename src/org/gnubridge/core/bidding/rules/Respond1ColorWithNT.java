@@ -5,6 +5,7 @@ import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.NoTrump;
+import org.gnubridge.core.deck.Trump;
 
 public class Respond1ColorWithNT extends Response {
 
@@ -29,17 +30,30 @@ public class Respond1ColorWithNT extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		if (calculator.getHighCardPoints() <= 10) {
-			return new Bid(1, NoTrump.i());
-		} else if (calculator.getHighCardPoints() >= 11 && calculator.getHighCardPoints() < 13
-				&& calculator.isBalanced()) {
-			return new Bid(2, NoTrump.i());
-		} else if (calculator.getHighCardPoints() >= 13 && calculator.getHighCardPoints() <= 15
-				&& calculator.isBalanced()) {
-			return new Bid(3, NoTrump.i());
+		Bid result = null;
+		Trump trump = partnersOpeningBid.getTrump();
+		int HCP = calculator.getHighCardPoints();
+		if (trump.isMajorSuit()) {
+			if (HCP >= 12 && calculator.isBalanced()) {
+				if (HCP <= 15 && hand.getSuitLength(trump.asSuit()) >= 4) {
+					result = new Bid(3, NoTrump.i());
+				} else if (HCP >= 13) {
+					result = new Bid(2, NoTrump.i());
+				}
+			} else if (HCP <= 12) {
+				result = new Bid(1, NoTrump.i());
+				result.makeForcing();
+			}
 		} else {
-			return null;
+			if (HCP <= 10) {
+				result = new Bid(1, NoTrump.i());
+			} else if (HCP >= 11 && HCP < 13 && calculator.isBalanced()) {
+				result = new Bid(2, NoTrump.i());
+			} else if (HCP >= 13 && HCP <= 15 && calculator.isBalanced()) {
+				result = new Bid(3, NoTrump.i());
+			}
 		}
+		return result;
 	}
 
 }

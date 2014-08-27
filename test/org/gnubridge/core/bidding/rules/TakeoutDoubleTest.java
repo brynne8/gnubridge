@@ -35,11 +35,10 @@ public class TakeoutDoubleTest extends TestCase {
 
 	}
 
-	//TODO: work here next
 	public void testTakeout() {
 		givenBidding(ONE_CLUBS);
 		andPlayersCards("A,K,2", "A,Q,3", "8,6,5,3", "K,J,3");
-		ruleShouldBid(null);
+		ruleShouldBid(DOUBLE);
 	}
 
 }

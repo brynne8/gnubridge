@@ -24,7 +24,9 @@ import org.gnubridge.core.bidding.rules.Respond1NT;
 import org.gnubridge.core.bidding.rules.Respond2C;
 import org.gnubridge.core.bidding.rules.Respond2NT;
 import org.gnubridge.core.bidding.rules.RespondOvercallSuit;
+import org.gnubridge.core.bidding.rules.RespondTakeoutDouble;
 import org.gnubridge.core.bidding.rules.Strong2C;
+import org.gnubridge.core.bidding.rules.TakeoutDouble;
 
 public class BiddingAgent {
 
@@ -49,8 +51,10 @@ public class BiddingAgent {
 		rules.add(new Rebid1ColorOriginalSuit(a, h));
 		rules.add(new Rebid1ColorWithNT(a, h));
 		rules.add(new OvercallSuit(a, h));
-		rules.add(new RespondOvercallSuit(a, h));
 		rules.add(new Overcall1NT(a, h));
+		rules.add(new TakeoutDouble(a, h));
+		rules.add(new RespondOvercallSuit(a, h));
+		rules.add(new RespondTakeoutDouble(a, h));
 		rules.add(new AlwaysPass());
 	}
 
@@ -59,7 +63,7 @@ public class BiddingAgent {
 		for (BiddingRule rule : rules) {
 			result = rule.getBid();
 			if (result != null) {
-				//System.out.println("rule: " + rule.getClass() + " recommends: " + result);
+				System.out.println("rule: " + rule.getClass() + " recommends: " + result);
 				break;
 			}
 		}

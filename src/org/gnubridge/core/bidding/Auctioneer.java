@@ -130,6 +130,14 @@ public class Auctioneer {
 		}
 		return null;
 	}
+	
+	public Call getDoubledCall() {
+		Call doubledCall = calls.get(bidCount - 3);
+		if (doubledCall.isPass()) {
+			doubledCall = calls.get(bidCount - 5);
+		}
+		return doubledCall;
+	}
 
 	/**
 	 *      The parties in bidding are referred to by directions of the world, but
@@ -173,12 +181,11 @@ public class Auctioneer {
 	}
 
 	public boolean may4thOvercall() {
-		if (bidCount < 3 || bidCount > 6) {
+		if (passCount != 2 || bidCount < 3 || bidCount > 6) {
 			return false;
 		}
-		if (calls.get(bidCount - 1).isPass()
-				&& calls.get(bidCount - 2).isPass()
-				&& isOpening(calls.get(bidCount - 3))) {
+		Call opening = calls.get(bidCount - 3);
+		if (isOpening(opening) && opening.getBid().is1Suit()) {
 			return true;
 		}
 		return false;

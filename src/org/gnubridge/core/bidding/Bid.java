@@ -209,7 +209,7 @@ public class Bid {
 		return null;
 	}
 
-	private boolean isDouble() {
+	public boolean isDouble() {
 		return DOUBLE.equals(this);
 	}
 

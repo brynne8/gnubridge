@@ -1,11 +1,10 @@
 package org.gnubridge.core.bidding.rules;
 
-import static org.gnubridge.core.bidding.Bid.*;
-
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.PointCalculator;
+import org.gnubridge.core.deck.NoTrump;
 
 public class Overcall1NT extends BiddingRule {
 
@@ -25,7 +24,7 @@ public class Overcall1NT extends BiddingRule {
 
 	@Override
 	protected Bid prepareBid() {
-		return ONE_NOTRUMP;
+		return new Bid(1, NoTrump.i());
 	}
 
 }

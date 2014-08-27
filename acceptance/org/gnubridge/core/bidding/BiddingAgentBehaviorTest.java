@@ -216,12 +216,11 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 		expectPlayerToBid(TWO_CLUBS);
 	}
 
-	//  not sure why this is 2nt and not 2d
-	//	public void testQuiz4Question11() {
-	//		givenBidding(ONE_HEARTS, PASS);
-	//		andPlayersCards("A,Q,5", "10,9", "A,9,5,4", "K,Q,8,7");
-	//		expectPlayerToBid(TWO_NOTRUMP);
-	//	}
+	public void testQuiz4Question11() {
+		givenBidding(ONE_HEARTS, PASS);
+		andPlayersCards("A,Q,5", "10,9", "A,9,5,4", "K,Q,8,7");
+		expectPlayerToBid(TWO_NOTRUMP);
+	}
 
 	public void testQuiz4Question12() {
 		givenBidding(ONE_HEARTS, PASS);

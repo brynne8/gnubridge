@@ -5,11 +5,11 @@ import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.Diamonds;
+import org.gnubridge.core.deck.Hearts;
+import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Suit;
 import org.gnubridge.core.deck.Clubs;
-import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
-import org.gnubridge.core.deck.Spades;
 
 public class Respond2C extends Response {
 
@@ -32,10 +32,7 @@ public class Respond2C extends Response {
 				Suit longest = null;
 				for (Suit color : mmlist) {
 					if (hand.getSuitLength(color) >= 5) {
-						if (longest == null) {
-							longest = color;
-						} else if (hand.getSuitLength(color) > hand
-								.getSuitLength(longest)) {
+						if (hand.AisStronger(color, longest)) {
 							longest = color;
 						}
 					}
