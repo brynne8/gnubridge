@@ -32,8 +32,7 @@ public class RebidForcing1NT extends RebidToLevel1Response {
 		if (HCP >= 19) {
 			Bid result = null;
 			for (Suit color : Suit.mmlist) {
-				if (!color.equals(open) && !color.equals(Spades.i())  
-						&& hand.getSuitLength(color) >= 4) {
+				if (color.isLowerRankThan(open) && hand.getSuitLength(color) >= 4) {
 					result = new Bid(3, color);
 					if (auction.isValid(result)) {
 						return result;

@@ -32,5 +32,11 @@ public class Mytest extends BiddingAgentTestCase {
 		andPlayersCards("A,J,8,6", "A,Q,7,6,2", "K,9,5", "6,4");
 		expectPlayerToBid(TWO_DIAMONDS);
 	}
+	
+	public void test5() {
+		givenBidding(ONE_DIAMONDS, PASS, ONE_SPADES, PASS);
+		andPlayersCards("K,J,9", "K,Q,7,6,5", "K,Q,9", "A,J,4");
+		expectPlayerToBid(TWO_NOTRUMP);
+	}
 
 }
