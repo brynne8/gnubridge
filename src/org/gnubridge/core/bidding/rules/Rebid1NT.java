@@ -23,9 +23,8 @@ public class Rebid1NT extends Rebid {
 		Bid result = null;
 		PointCalculator pc = new PointCalculator(hand);
 
-		Bid partnersBid = auction.getPartnersLastCall().getBid();
-		int rank = partnersBid.getValue();
-		Trump trump = partnersBid.getTrump();
+		int rank = response.getValue();
+		Trump trump = response.getTrump();
 		if (rank == 2) {
 			if (trump.equals(Clubs.i())) {
 				if (hand.getSuitLength(Hearts.i()) == 4) {

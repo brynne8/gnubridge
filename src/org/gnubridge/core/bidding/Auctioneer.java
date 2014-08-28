@@ -249,6 +249,24 @@ public class Auctioneer {
 
 		return result;
 	}
+	
+	public int biddingSequenceLength() {
+		List<Call> reversedCalls = getCalls();
+		Collections.reverse(reversedCalls);
+		boolean ourBid = false;
+		int seqLength = 0;
+		for (Call call : reversedCalls) {
+			if (ourBid) {
+				if (call.getBid().hasTrump()) {
+					seqLength++;
+				} else {
+					break;
+				}
+			}
+			ourBid = !ourBid;
+		}
+		return seqLength;
+	}
 
 	public boolean isOpening(Call callWithTrump) {
 		int index = getCallOrderZeroBased(callWithTrump.getBid());
