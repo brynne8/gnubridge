@@ -39,7 +39,9 @@ public class Respond1NT extends Response {
 				result = new Bid(2, Clubs.i());
 			}
 			if (length == 4) {
-				result = new Bid(2, Clubs.i());
+				if (points >= 8) {
+					result = new Bid(2, Clubs.i());
+				}
 			} else if (length >= 6 && points >= 10 && points <=13) {
 				result = new Bid(3, longer);
 				result.makeGameForcing();

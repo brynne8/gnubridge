@@ -92,7 +92,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question2() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("Q,10,8,6,2", "9,5", "J,6,4", "9,8,3");
-		expectPlayerToBid(TWO_SPADES);
+		expectPlayerToBid(TWO_HEARTS);
 	}
 
 	public void testQuiz3Question3() {
@@ -128,7 +128,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question8() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("2", "9,8,7,5,3", "Q,J,8,7,5", "4,3");
-		expectPlayerToBid(TWO_HEARTS);
+		expectPlayerToBid(TWO_DIAMONDS);
 	}
 
 	public void testQuiz3Question9() {
@@ -140,7 +140,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question10() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("K,Q,10,8,6,5", "2", "K,10,4", "9,8,3");
-		expectPlayerToBid(FOUR_SPADES);
+		expectPlayerToBid(THREE_SPADES);
 	}
 
 	public void testQuiz3Question11() {
@@ -152,7 +152,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question12() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("A,J,8,7,3", "A,J,8,7,3", "10,2", "9");
-		expectPlayerToBid(THREE_SPADES);
+		expectPlayerToBid(TWO_DIAMONDS);
 	}
 
 	public void testQuiz4Question1() {

@@ -29,17 +29,17 @@ public class Rebid2NT extends Rebid {
 			}
 			if (trump.equals(Clubs.i())) {
 				if (hand.getSuitLength(Hearts.i()) >= 4) {
-					result = new Bid(2, Hearts.i());
+					result = new Bid(3, Hearts.i());
 				} else if (hand.getSuitLength(Spades.i()) >= 4) {
-					result = new Bid(2, Spades.i());
+					result = new Bid(3, Spades.i());
 				} else {
-					result = new Bid(2, Diamonds.i());
+					result = new Bid(3, Diamonds.i());
 				}
 			} else {
 				if (trump.equals(Diamonds.i())) {
-					result = new Bid(2, Hearts.i());
+					result = new Bid(3, Hearts.i());
 				} else if (trump.equals(Hearts.i())) {
-					result = new Bid(2, Spades.i());
+					result = new Bid(3, Spades.i());
 				}
 			}
 		}
