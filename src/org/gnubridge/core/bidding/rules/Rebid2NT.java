@@ -4,7 +4,6 @@ import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.Pass;
-import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.Clubs;
 import org.gnubridge.core.deck.Diamonds;
 import org.gnubridge.core.deck.Hearts;
@@ -12,20 +11,22 @@ import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Trump;
 
-public class Rebid1NT extends Rebid {
+public class Rebid2NT extends Rebid {
 
-	public Rebid1NT(Auctioneer a, Hand h) {
+	public Rebid2NT(Auctioneer a, Hand h) {
 		super(a, h);
 	}
 
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
-		PointCalculator pc = new PointCalculator(hand);
 
 		int rank = response.getValue();
 		Trump trump = response.getTrump();
-		if (rank == 2) {
+		if (rank == 3) {
+			if (trump.isNoTrump()) {
+				result = new Pass();
+			}
 			if (trump.equals(Clubs.i())) {
 				if (hand.getSuitLength(Hearts.i()) >= 4) {
 					result = new Bid(2, Hearts.i());
@@ -34,43 +35,25 @@ public class Rebid1NT extends Rebid {
 				} else {
 					result = new Bid(2, Diamonds.i());
 				}
-			} else if (trump.isNoTrump()) {
-				if (pc.getHighCardPoints() == 17) {
-					result = new Bid(3, NoTrump.i());
-				} else {
-					result = new Pass();
-				}
 			} else {
 				if (trump.equals(Diamonds.i())) {
 					result = new Bid(2, Hearts.i());
-				} else {
+				} else if (trump.equals(Hearts.i())) {
 					result = new Bid(2, Spades.i());
 				}
-			}
-		} else if (rank == 3) {
-			if (trump.isNoTrump()) {
-				result = new Pass();
-			} else if (hand.getSuitLength(trump.asSuit()) >= 2) {
-				if (trump.isMajorSuit()) {
-					result = new Bid(4, trump);
-				} else if (trump.isMinorSuit() && pc.getCombinedPoints() >= 17) {
-					result = new Bid(4, trump);
-				}
-			} else {
-				result = new Bid(3, NoTrump.i()); 
 			}
 		}
 
 		return result;
 	}
 
-	private boolean partnerWasRespondingToMy1NT() {
-		return super.applies() && new Bid(1, NoTrump.i()).equals(opening);
+	private boolean partnerWasRespondingToMy2NT() {
+		return super.applies() && new Bid(2, NoTrump.i()).equals(opening);
 	}
 
 	@Override
 	protected boolean applies() {
-		return partnerWasRespondingToMy1NT();
+		return partnerWasRespondingToMy2NT();
 	}
 
 }

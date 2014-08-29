@@ -25,17 +25,21 @@ public class Respond1NT extends Response {
 	protected Bid prepareBid() {
 		Bid result = null;
 		Suit longer = Hearts.i();
-		int length = hand.getSuitLength(Hearts.i());
-		if (hand.getSuitLength(Spades.i()) > length) {
+		int hearts = hand.getSuitLength(Hearts.i());
+		int spades = hand.getSuitLength(Spades.i());
+		int length = hearts;
+		if (spades > hearts) {
 			longer = Spades.i();
-			length = hand.getSuitLength(Spades.i());
+			length = spades;
 		}
 		int points = pc.getCombinedPoints();
 		if (length > 3) {
+			if (length == 5 && (hearts == 4 || spades == 4)
+					&& points >= 8 && points <= 9) {
+				result = new Bid(2, Clubs.i());
+			}
 			if (length == 4) {
-				if (points >= 8) {
-					result = new Bid(2, Clubs.i());
-				}
+				result = new Bid(2, Clubs.i());
 			} else if (length >= 6 && points >= 10 && points <=13) {
 				result = new Bid(3, longer);
 				result.makeGameForcing();
