@@ -42,9 +42,17 @@ public class Rebid1NT extends Rebid {
 				}
 			} else {
 				if (trump.equals(Diamonds.i())) {
-					result = new Bid(2, Hearts.i());
+					if (pc.getCombinedPoints() >= 17) {
+						result = new Bid(2, Spades.i());
+					} else {
+						result = new Bid(2, Hearts.i());
+					}
 				} else {
-					result = new Bid(2, Spades.i());
+					if (pc.getCombinedPoints() >= 17) {
+						result = new Bid(2, NoTrump.i());
+					} else {
+						result = new Bid(2, Spades.i());
+					}
 				}
 			}
 		} else if (rank == 3) {
