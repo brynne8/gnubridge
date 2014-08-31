@@ -42,7 +42,7 @@ public class RespondOvercallSuit extends Response {
 		}
 		List<Suit> suitsWithAtLeast5Cards = hand.getSuitsWithAtLeastCards(5);
 		if (suitsWithAtLeast5Cards.size() > 0) {
-			Suit highestSuitWithAtLeast5Cards = suitsWithAtLeast5Cards.get(0).asSuit();
+			Suit highestSuitWithAtLeast5Cards = suitsWithAtLeast5Cards.get(0);
 			if (calculator.getCombinedPoints() >= 8 && calculator.getCombinedPoints() <= 11) {
 				return makeCheapestBid(highestSuitWithAtLeast5Cards);
 			}
