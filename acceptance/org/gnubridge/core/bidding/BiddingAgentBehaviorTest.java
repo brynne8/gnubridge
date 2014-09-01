@@ -6,7 +6,7 @@ import static org.gnubridge.core.bidding.Bid.*;
  * 
  * contributed by Jonathan Campbell, based on Pavlicek's Online Bridge Basics
  * Lesson 4
- * http://www.rpbridge.net/1t41.htm
+ * 
  *
  */
 public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
@@ -104,7 +104,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question4() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("3,2", "K,Q,9,8,6", "Q,7,3", "A,6,4");
-		expectPlayerToBid(THREE_HEARTS);
+		expectPlayerToBid(TWO_DIAMONDS);
 	}
 
 	public void testQuiz3Question5() {
@@ -134,7 +134,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz3Question9() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("K,Q,8", "A,J,10,6", "K,J,2", "6,5,4");
-		expectPlayerToBid(THREE_NOTRUMP);
+		expectPlayerToBid(TWO_CLUBS);
 	}
 
 	public void testQuiz3Question10() {

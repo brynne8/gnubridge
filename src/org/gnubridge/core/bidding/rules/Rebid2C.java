@@ -3,13 +3,11 @@ package org.gnubridge.core.bidding.rules;
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
-import org.gnubridge.core.bidding.Pass;
 import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.Clubs;
 import org.gnubridge.core.deck.Diamonds;
 import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
-import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Suit;
 import org.gnubridge.core.deck.Trump;
 

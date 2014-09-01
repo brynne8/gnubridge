@@ -50,5 +50,11 @@ public class Mytest extends BiddingAgentTestCase {
 		andPlayersCards("K,9,8,5", "K,7,6", "K,Q,9,3", "10,7,2");
 		expectPlayerToBid(FOUR_HEARTS);
 	}
+	
+	public void test8() {
+		givenBidding(TWO_CLUBS, PASS, TWO_HEARTS, PASS);
+		andPlayersCards("J,9,8,5", "J,7,6", "J,9,4,3", "10,7,2");
+		expectPlayerToBid(THREE_HEARTS);
+	}
 
 }

@@ -23,7 +23,6 @@ public class Respond1NT extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		Bid result = null;
 		Suit longer = Hearts.i();
 		int hearts = hand.getSuitLength(Hearts.i());
 		int spades = hand.getSuitLength(Spades.i());
@@ -36,40 +35,50 @@ public class Respond1NT extends Response {
 		if (length > 3) {
 			if (length == 5 && (hearts == 4 || spades == 4)
 					&& points >= 8 && points <= 9) {
-				result = new Bid(2, Clubs.i());
+				return new Bid(2, Clubs.i());
 			}
 			if (length == 4) {
 				if (points >= 8) {
-					result = new Bid(2, Clubs.i());
+					return new Bid(2, Clubs.i());
 				}
 			} else if (length >= 6 && points >= 10 && points <=13) {
-				result = new Bid(3, longer);
-				result.makeGameForcing();
+				return new Bid(3, longer);
 			} else {
 				if (longer.equals(Hearts.i())) {
-					result = new Bid(2, Diamonds.i());
+					return new Bid(2, Diamonds.i());
 				} else {
-					result = new Bid(2, Hearts.i());
+					return new Bid(2, Hearts.i());
 				}
 			}
 		}
-		if (points >= 8 && points <= 10) {
-			if (hand.getSuitLength(Clubs.i()) >= 6) {
-				result = new Bid(3, Clubs.i());
-			} else if (hand.getSuitLength(Diamonds.i()) >= 6) {
-				result = new Bid(3, Diamonds.i());
+
+		longer = Clubs.i();
+		int clubs = hand.getSuitLength(Clubs.i());
+		int diamonds = hand.getSuitLength(Diamonds.i());
+		length = clubs;
+		if (diamonds > clubs) {
+			longer = Diamonds.i();
+			length = diamonds;
+		}
+		if (length >= 5) {
+			if (points <= 7 && diamonds >= 5) {
+				return new Bid(2, Spades.i());
+			} else if (points >= 10 && clubs >= 4 && diamonds >= 4) {
+				return new Bid(2, Spades.i());
+			} else if (points >= 8 && points <= 10) {
+				return new Bid(3, longer);
 			}
 		}
-		if (result == null) {
-			if (pc.getHighCardPoints() <= 7) {
-				result = new Pass();
-			} else if (pc.getHighCardPoints() <= 9) {
-				result = new Bid(2, NoTrump.i());
-			} else if (pc.getHighCardPoints() <= 15) {
-				result = new Bid(3, NoTrump.i());
-			}
+		
+		if (pc.getHighCardPoints() <= 7) {
+			return new Pass();
+		} else if (pc.getHighCardPoints() <= 9) {
+			return new Bid(2, NoTrump.i());
+		} else if (pc.getHighCardPoints() <= 15) {
+			return new Bid(3, NoTrump.i());
 		}
-		return result;
+		
+		return null;
 	}
 
 	@Override

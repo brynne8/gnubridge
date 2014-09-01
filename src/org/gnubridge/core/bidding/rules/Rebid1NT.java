@@ -34,25 +34,31 @@ public class Rebid1NT extends Rebid {
 				} else {
 					result = new Bid(2, Diamonds.i());
 				}
+			} else if (trump.equals(Spades.i())) {
+				if (hand.getSuitLength(Clubs.i()) >= 4) {
+					result = new Bid(3, Clubs.i());
+				} else if (hand.getSuitLength(Diamonds.i()) >= 4) {
+					result = new Bid(3, Diamonds.i());
+				} else {
+					result = new Bid(2, NoTrump.i());
+				}
 			} else if (trump.isNoTrump()) {
 				if (pc.getHighCardPoints() == 17) {
 					result = new Bid(3, NoTrump.i());
 				} else {
 					result = new Pass();
 				}
-			} else {
-				if (trump.equals(Diamonds.i())) {
-					if (pc.getCombinedPoints() >= 17) {
-						result = new Bid(2, Spades.i());
-					} else {
-						result = new Bid(2, Hearts.i());
-					}
+			} else if (trump.equals(Diamonds.i())) {
+				if (pc.getCombinedPoints() >= 17) {
+					result = new Bid(2, Spades.i());
 				} else {
-					if (pc.getCombinedPoints() >= 17) {
-						result = new Bid(2, NoTrump.i());
-					} else {
-						result = new Bid(2, Spades.i());
-					}
+					result = new Bid(2, Hearts.i());
+				}
+			} else {
+				if (pc.getCombinedPoints() >= 17) {
+					result = new Bid(2, NoTrump.i());
+				} else {
+					result = new Bid(2, Spades.i());
 				}
 			}
 		} else if (rank == 3) {
