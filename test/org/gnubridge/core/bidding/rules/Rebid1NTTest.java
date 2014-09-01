@@ -7,6 +7,7 @@ import org.gnubridge.core.West;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.Pass;
+import org.gnubridge.core.deck.Clubs;
 import org.gnubridge.core.deck.Diamonds;
 import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
@@ -51,7 +52,7 @@ public class Rebid1NTTest extends TestCase {
 		a.bid(new Pass());
 		Rebid1NT rule = new Rebid1NT(
 				a, new Hand("K,3,2", "A,3", "A,Q,8,6", "K,J,5,3"));
-		assertNull(rule.getBid());
+		assertEquals(new Bid(3, NoTrump.i()), rule.getBid());
 	}
 	public void testPassIfPartnerCalled2InAMajorColor() {
 		Auctioneer a = new Auctioneer(West.i());
@@ -61,7 +62,7 @@ public class Rebid1NTTest extends TestCase {
 		a.bid(new Pass());
 		Rebid1NT rule = new Rebid1NT(
 				a, new Hand("K,3,2", "A,3", "A,Q,8,6", "K,J,5,3"));
-		assertEquals(new Pass(), rule.getBid());
+		assertEquals(new Bid(3, Clubs.i()), rule.getBid());
 	}
 	public void test2NTInvitational16HCP() {
 		Auctioneer a = new Auctioneer(West.i());

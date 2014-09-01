@@ -18,8 +18,11 @@ public abstract class Rebid extends BiddingRule {
 		if (auction.biddingSequenceLength() == 2) {
 			Call getCall = auction.getPartnersLastCall();
 			response = getCall.getBid();
-			opening = auction.getPartnersCall(getCall).getBid();
-			return true;
+			getCall = auction.getPartnersCall(getCall);
+			if (auction.isOpening(getCall)) {
+				opening = getCall.getBid();
+				return true;
+			}
 		}
 		return false;
 	}

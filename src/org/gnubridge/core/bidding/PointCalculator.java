@@ -125,6 +125,24 @@ public class PointCalculator {
 		}
 	}
 
+	public boolean isSemiBalanced() {
+		boolean singletons = false;
+		boolean voids = false;
+		for (Suit color : Suit.list) {
+			int cardsInColor = hand.getSuitLength(color);
+			if (cardsInColor == 0) {
+				voids = true;
+			} else if (cardsInColor == 1) {
+				singletons = true;
+			}
+		}
+		if (singletons || voids) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public boolean isTame() {
 		if (hand.matchesSuitLengthsLongToShort(4, 4, 4, 1)) {
 			return true;

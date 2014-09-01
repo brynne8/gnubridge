@@ -22,7 +22,7 @@ public class Strong2C extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		return auction.isOpeningBid() && pc.getHighCardPoints() >= 22;
+		return auction.isOpeningBid() && pc.getCombinedPoints() >= 23;
 	}
 
 }

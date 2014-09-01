@@ -67,11 +67,9 @@ public class Rebid1NT extends Rebid {
 			} else if (hand.getSuitLength(trump.asSuit()) >= 2) {
 				if (trump.isMajorSuit()) {
 					result = new Bid(4, trump);
-				} else if (trump.isMinorSuit() && pc.getCombinedPoints() >= 17) {
-					result = new Bid(4, trump);
+				} else if (pc.getHighCardPoints() == 17) {
+					result = new Bid(3, NoTrump.i());
 				}
-			} else {
-				result = new Bid(3, NoTrump.i()); 
 			}
 		}
 

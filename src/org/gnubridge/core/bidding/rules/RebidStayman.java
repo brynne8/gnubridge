@@ -34,7 +34,17 @@ public class RebidStayman extends PRebidNoTrump {
 			} else if (spades == 5 && hearts == 4) {
 				return new Bid(level + 1, Spades.i());
 			}
-			//TODO: other bidding
+			if (level == 1) {
+				int points = pc.getCombinedPoints();
+				
+				if (hearts == 5 && spades == 5) {
+					if (points >= 8 && points <= 9) {
+						return new Bid(3, Hearts.i());
+					} else if (points >= 10) {
+						return new Bid(3, Spades.i());
+					}
+				} 
+			}
 		} else if (trump.isMajorSuit()) {
 			if (trump.equals(Hearts.i())) {
 				if (hearts == 4 && spades == 5) {

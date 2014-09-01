@@ -36,8 +36,7 @@ public class Respond1NT extends Response {
 			if (length == 5 && (hearts == 4 || spades == 4)
 					&& points >= 8 && points <= 9) {
 				return new Bid(2, Clubs.i());
-			}
-			if (length == 4) {
+			} else if (length == 4) {
 				if (points >= 8) {
 					return new Bid(2, Clubs.i());
 				}
@@ -61,20 +60,24 @@ public class Respond1NT extends Response {
 			length = diamonds;
 		}
 		if (length >= 5) {
-			if (points <= 7 && diamonds >= 5) {
+			if (points >= 14 || (length >= 6 && points >= 12)) {
+				return new Bid(2, Clubs.i());
+			} else if (points <= 7 && diamonds >= 5 
+					&& (diamonds == 6 || clubs >= 5)) {
 				return new Bid(2, Spades.i());
 			} else if (points >= 10 && clubs >= 4 && diamonds >= 4) {
 				return new Bid(2, Spades.i());
-			} else if (points >= 8 && points <= 10) {
+			} else if (length >= 6 && points >= 6 && points <= 9) {
 				return new Bid(3, longer);
 			}
 		}
 		
-		if (pc.getHighCardPoints() <= 7) {
+		int HCP = pc.getHighCardPoints();
+		if (HCP <= 7) {
 			return new Pass();
-		} else if (pc.getHighCardPoints() <= 9) {
+		} else if (HCP <= 9 && pc.isSemiBalanced()) {
 			return new Bid(2, NoTrump.i());
-		} else if (pc.getHighCardPoints() <= 15) {
+		} else if (HCP <= 15 && pc.isSemiBalanced()) {
 			return new Bid(3, NoTrump.i());
 		}
 		
