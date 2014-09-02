@@ -16,7 +16,7 @@ public class BiddingAgentTest extends BiddingAgentTestCase {
 	public void testMajorSuit1NTResponse() {
 		givenBidding(ONE_NOTRUMP, PASS);
 		andPlayersCards("9,8,7,6,2", "A,3", "6,5,3", "5,4,3");
-		expectPlayerToBid(TWO_SPADES);
+		expectPlayerToBid(TWO_HEARTS);
 	}
 
 	public void testOpenersResponseToMajorSuitResponseTo1NT() {
@@ -32,7 +32,7 @@ public class BiddingAgentTest extends BiddingAgentTestCase {
 		a.bid(ONE_NOTRUMP);
 		a.bid(PASS);
 		BiddingAgent east = new BiddingAgent(a, new Hand("K,8,7,6", "A,3,2", "6,5,3", "Q,4,3"));
-		assertEquals(TWO_NOTRUMP, east.getBid());
+		assertEquals(TWO_CLUBS, east.getBid());
 		a.bid(TWO_NOTRUMP);
 		a.bid(PASS);
 		assertEquals(THREE_NOTRUMP, west.getBid());
@@ -119,7 +119,7 @@ public class BiddingAgentTest extends BiddingAgentTestCase {
 	public void testRespondOvercall1NT() {
 		givenBidding(ONE_CLUBS, ONE_NOTRUMP, PASS);
 		andPlayersCards("9,8,7,6,2", "A,3", "6,5,3", "Q,4,3");
-		expectPlayerToBid(TWO_SPADES);
+		expectPlayerToBid(TWO_HEARTS);
 	}
 
 	public void testHaveToBidSomething() {

@@ -214,25 +214,43 @@ public class Auctioneer {
 		return -1;
 	}
 
-	public boolean isOvercall(Bid bid) {
+	private int OvercallIndex(Bid bid) {
 		if (PASS.equals(bid)) {
-			return false;
+			return 0;
 		}
-		boolean result = false;
+		int countPass = 0;
 		int callOrder = getCallOrderZeroBased(bid);
-		boolean them = true;
+		if (isOpening(calls.get(callOrder))) {
+			return 0;
+		}
+		boolean ourBid = false;
 		while (callOrder != 0) {
 			callOrder--;
 			Call call = calls.get(callOrder);
 			if (!call.isPass()) {
-				if (them && isOpening(call)) {
-					result = true;
+				if (ourBid || !isOpening(call)) {
+					countPass = -1;
 				}
 				break;
 			}
-			them = !them;
+			countPass++;
+			ourBid = !ourBid;
 		}
-		return result;
+		if (countPass == 0) {
+			return 1;
+		} else if (countPass == 2) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+
+	public boolean isOvercall(Bid bid) {
+		return OvercallIndex(bid) != 0;
+	}
+
+	public boolean isFourthOvercall(Bid bid) {
+		return OvercallIndex(bid) == -1;
 	}
 
 	public Set<Trump> getEnemyTrumps() {

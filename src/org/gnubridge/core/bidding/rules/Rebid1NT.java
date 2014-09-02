@@ -13,6 +13,8 @@ import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Trump;
 
 public class Rebid1NT extends Rebid {
+	
+	boolean fourthOvercalled = false;
 
 	public Rebid1NT(Auctioneer a, Hand h) {
 		super(a, h);
@@ -25,6 +27,7 @@ public class Rebid1NT extends Rebid {
 
 		int rank = response.getValue();
 		Trump trump = response.getTrump();
+		int maximum = fourthOvercalled ? 14 : 17;
 		if (rank == 2) {
 			if (trump.equals(Clubs.i())) {
 				if (hand.getSuitLength(Hearts.i()) >= 4) {
@@ -43,19 +46,19 @@ public class Rebid1NT extends Rebid {
 					result = new Bid(2, NoTrump.i());
 				}
 			} else if (trump.isNoTrump()) {
-				if (pc.getHighCardPoints() == 17) {
+				if (pc.getHighCardPoints() >= maximum) {
 					result = new Bid(3, NoTrump.i());
 				} else {
 					result = new Pass();
 				}
 			} else if (trump.equals(Diamonds.i())) {
-				if (pc.getCombinedPoints() >= 17) {
+				if (pc.getCombinedPoints() >= maximum) {
 					result = new Bid(2, Spades.i());
 				} else {
 					result = new Bid(2, Hearts.i());
 				}
 			} else {
-				if (pc.getCombinedPoints() >= 17) {
+				if (pc.getCombinedPoints() >= maximum) {
 					result = new Bid(2, NoTrump.i());
 				} else {
 					result = new Bid(2, Spades.i());
@@ -67,7 +70,7 @@ public class Rebid1NT extends Rebid {
 			} else if (hand.getSuitLength(trump.asSuit()) >= 2) {
 				if (trump.isMajorSuit()) {
 					result = new Bid(4, trump);
-				} else if (pc.getHighCardPoints() == 17) {
+				} else if (pc.getHighCardPoints() >= maximum) {
 					result = new Bid(3, NoTrump.i());
 				}
 			}
@@ -77,7 +80,20 @@ public class Rebid1NT extends Rebid {
 	}
 
 	private boolean partnerWasRespondingToMy1NT() {
-		return super.applies() && new Bid(1, NoTrump.i()).equals(opening);
+		if (super.applies()) {
+			return new Bid(1, NoTrump.i()).equals(opening);
+		} else {
+			if (auction.getPartnersLastCall() != null) {
+				opening = auction.getPartnersLastCall().getBid();
+				if (auction.isOvercall(opening)) {
+					if (auction.isFourthOvercall(opening)) {
+						fourthOvercalled = true;
+					}
+					return new Bid(1, NoTrump.i()).equals(opening);
+				}
+			}
+			return false;
+		}
 	}
 
 	@Override

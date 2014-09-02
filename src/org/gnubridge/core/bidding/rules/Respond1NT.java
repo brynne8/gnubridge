@@ -15,6 +15,7 @@ import org.gnubridge.core.deck.Spades;
 public class Respond1NT extends Response {
 
 	private final PointCalculator pc;
+	boolean fourthOvercalled = false;
 
 	public Respond1NT(Auctioneer a, Hand h) {
 		super(a, h);
@@ -31,7 +32,7 @@ public class Respond1NT extends Response {
 			longer = Spades.i();
 			length = spades;
 		}
-		int points = pc.getCombinedPoints();
+		int points = fourthOvercalled ? pc.getCombinedPoints() - 3 : pc.getCombinedPoints();
 		if (length > 3) {
 			if (length == 5 && (hearts == 4 || spades == 4)
 					&& points >= 8 && points <= 9) {
@@ -86,6 +87,12 @@ public class Respond1NT extends Response {
 
 	@Override
 	protected boolean applies() {
-		return super.applies() && new Bid(1, NoTrump.i()).equals(partnersOpeningBid);
+		if (super.applies() && new Bid(1, NoTrump.i()).equals(partnersOpeningBid)) {
+			if (auction.isFourthOvercall(partnersOpeningBid)) {
+				fourthOvercalled = true;
+			}
+			return true;
+		}
+		return false;
 	}
 }
