@@ -29,16 +29,17 @@ public class RebidJacobyTransfer extends PRebidNoTrump {
 		
 		Trump transfer = response.getTrump();
 		Trump trump = rebid.getTrump();
+		int HCP = fourthOvercalled ? pc.getHighCardPoints() - 3 : pc.getHighCardPoints();
 		int INVITATION = (level == 1) ? 10 : 5; 
 		if (transfer.equals(Diamonds.i())) {
 			if (trump.equals(Spades.i())) {
-				if (pc.getHighCardPoints() >= 8) {
+				if (HCP >= 8) {
 					return new Bid(4, Hearts.i());
 				} else {
 					return new Bid(3, NoTrump.i());
 				}
 			} else {
-				if (pc.getHighCardPoints() >= INVITATION) {
+				if (HCP >= INVITATION) {
 					if (hand.getSuitLength(Hearts.i()) >= 3) {
 						return new Bid(4, Hearts.i());
 					} else {
@@ -48,13 +49,13 @@ public class RebidJacobyTransfer extends PRebidNoTrump {
 			}
 		} else {
 			if (trump.equals(NoTrump.i())) {
-				if (pc.getHighCardPoints() >= 8) {
+				if (HCP >= 8) {
 					return new Bid(4, Spades.i());
 				} else {
 					return new Bid(3, NoTrump.i());
 				}
 			} else {
-				if (pc.getHighCardPoints() >= INVITATION) {
+				if (HCP >= INVITATION) {
 					if (hand.getSuitLength(Hearts.i()) >= 3) {
 						return new Bid(4, Spades.i());
 					} else {

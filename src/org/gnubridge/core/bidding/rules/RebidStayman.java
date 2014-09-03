@@ -12,21 +12,14 @@ import org.gnubridge.core.deck.Trump;
 
 public class RebidStayman extends PRebidNoTrump {
 
-	boolean fourthOvercalled = false;
-
 	public RebidStayman(Auctioneer a, Hand h) {
 		super(a, h);
 	}
 
 	@Override
 	protected boolean applies() {
-		if (super.applies() && response.getTrump().equals(Clubs.i())
-				&& response.getValue() == level + 1 && rebid.getTrump().isSuit()) {
-			if (auction.isFourthOvercall(opening)) {
-				fourthOvercalled = true;
-			}
-		}
-		return false;
+		return super.applies() && response.getTrump().equals(Clubs.i())
+				&& response.getValue() == level + 1 && rebid.getTrump().isSuit();
 	}
 
 	@Override
