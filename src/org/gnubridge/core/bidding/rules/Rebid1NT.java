@@ -13,7 +13,7 @@ import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Trump;
 
 public class Rebid1NT extends Rebid {
-	
+
 	boolean fourthOvercalled = false;
 
 	public Rebid1NT(Auctioneer a, Hand h) {

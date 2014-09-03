@@ -12,22 +12,31 @@ import org.gnubridge.core.deck.Trump;
 
 public class RebidStayman extends PRebidNoTrump {
 
+	boolean fourthOvercalled = false;
+
 	public RebidStayman(Auctioneer a, Hand h) {
 		super(a, h);
 	}
 
 	@Override
 	protected boolean applies() {
-		return super.applies() && response.getTrump().equals(Clubs.i())
-				&& response.getValue() == level + 1 && rebid.getTrump().isSuit();
+		if (super.applies() && response.getTrump().equals(Clubs.i())
+				&& response.getValue() == level + 1 && rebid.getTrump().isSuit()) {
+			if (auction.isFourthOvercall(opening)) {
+				fourthOvercalled = true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	protected Bid prepareBid() {
 		PointCalculator pc = new PointCalculator(hand);
+
 		Trump trump = rebid.getTrump();
 		int hearts = hand.getSuitLength(Hearts.i());
 		int spades = hand.getSuitLength(Spades.i());
+		int points = fourthOvercalled ? pc.getCombinedPoints() - 3 : pc.getCombinedPoints();
 		if (trump.equals(Diamonds.i())) {
 			if (hearts == 5 && spades == 4) {
 				return new Bid(level + 1, Hearts.i());
@@ -35,8 +44,6 @@ public class RebidStayman extends PRebidNoTrump {
 				return new Bid(level + 1, Spades.i());
 			}
 			if (level == 1) {
-				int points = pc.getCombinedPoints();
-				
 				if (hearts == 5 && spades == 5) {
 					if (points >= 8 && points <= 9) {
 						return new Bid(3, Hearts.i());
@@ -52,7 +59,6 @@ public class RebidStayman extends PRebidNoTrump {
 				}
 			}
 			if (level == 1) {
-				int points = pc.getCombinedPoints();
 				if (hand.getSuitLength(trump.asSuit()) >= 4) {
 					if (points >= 8 && points <= 9) {
 						return new Bid(3, trump);

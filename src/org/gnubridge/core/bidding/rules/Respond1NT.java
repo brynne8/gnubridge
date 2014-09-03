@@ -73,7 +73,7 @@ public class Respond1NT extends Response {
 			}
 		}
 		
-		int HCP = pc.getHighCardPoints();
+		int HCP = fourthOvercalled ? pc.getHighCardPoints() - 3 : pc.getHighCardPoints();
 		if (HCP <= 7) {
 			return new Pass();
 		} else if (HCP <= 9 && pc.isSemiBalanced()) {
