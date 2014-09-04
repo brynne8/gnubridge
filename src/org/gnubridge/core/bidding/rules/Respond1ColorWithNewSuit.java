@@ -12,6 +12,10 @@ public class Respond1ColorWithNewSuit extends Response {
 	private ResponseCalculator pc;
 	private Suit highestOver4;
 
+	public Respond1ColorWithNewSuit(Auctioneer a, Hand h) {
+		super(a, h);
+	}
+
 	@Override
 	protected boolean applies() {
 		boolean result = false;
@@ -25,10 +29,6 @@ public class Respond1ColorWithNewSuit extends Response {
 		return result;
 	}
 
-	public Respond1ColorWithNewSuit(Auctioneer a, Hand h) {
-		super(a, h);
-	}
-
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
@@ -37,7 +37,7 @@ public class Respond1ColorWithNewSuit extends Response {
 			result.makeGameForcing();
 		} else {
 			result = new Bid(1, highestOver4);
-			if (!auction.isValid(result) && pc.getCombinedPoints() >= 11
+			if (!auction.isValid(result) && pc.getCombinedPoints() >= 13
 					&& hand.getSuitLength(highestOver4) >= 5) {
 				result = new Bid(2, highestOver4);
 			}

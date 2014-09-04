@@ -158,7 +158,7 @@ public class BiddingAgentBehaviorTest extends BiddingAgentTestCase {
 	public void testQuiz4Question1() {
 		givenBidding(ONE_DIAMONDS, PASS);
 		andPlayersCards("9", "K,7,5", "Q,9,7,3", "10,8,6,5,4");
-		expectPlayerToBid(TWO_DIAMONDS);
+		expectPlayerToBid(PASS);
 	}
 
 	public void testQuiz4Question2() {

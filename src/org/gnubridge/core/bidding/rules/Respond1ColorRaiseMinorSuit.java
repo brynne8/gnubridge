@@ -4,6 +4,7 @@ import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.ResponseCalculator;
+import org.gnubridge.core.deck.Trump;
 
 public class Respond1ColorRaiseMinorSuit extends Response {
 
@@ -19,7 +20,7 @@ public class Respond1ColorRaiseMinorSuit extends Response {
 		if (super.applies()) {
 			calculator = new ResponseCalculator(hand, partnersOpeningBid);
 			if (partnersOpeningBid.getTrump().isMinorSuit() && partnersOpeningBid.getValue() == 1
-					&& calculator.getCombinedPoints() >= 6
+					&& calculator.getCombinedPoints() >= 5
 					&& hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 4) {
 				result = true;
 			}
@@ -29,10 +30,13 @@ public class Respond1ColorRaiseMinorSuit extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		if (calculator.getCombinedPoints() >= 6 && calculator.getCombinedPoints() <= 10) {
-			return new Bid(2, partnersOpeningBid.getTrump());
-		} else if (calculator.getCombinedPoints() >= 13 && calculator.getCombinedPoints() <= 16) {
-			return new Bid(3, partnersOpeningBid.getTrump());
+		int points = calculator.getCombinedPoints();
+		Trump trump = partnersOpeningBid.getTrump();
+		if (points >= 10 && (hand.getSuitLength(trump.asSuit()) != 4 
+				|| calculator.getHighCardPoints(hand.getSuitHi2Low(trump.asSuit())) > 4)) {
+			return new Bid(2, trump);
+		} else if (hand.getSuitLength(trump.asSuit()) >= 6) {
+			return new Bid(3, trump);
 		} else {
 			return null;
 		}
