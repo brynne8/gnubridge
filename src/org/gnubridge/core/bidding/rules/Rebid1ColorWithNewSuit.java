@@ -36,9 +36,11 @@ public class Rebid1ColorWithNewSuit extends RebidToLevel1Response {
 			return bid;
 		}
 		if ((minimumBid == 2 && !calculator.isBalanced())) {
-			if (calculator.getCombinedPoints() >= 16 || unbidSuit.isLowerRankThan(opening.getTrump())) {
+			if (calculator.getCombinedPoints() >= 16) {
 				return new Bid(minimumBid, unbidSuit);
 			}
+			unbidSuit = getLowerUnbidSuitWithAtLeast4Cards();
+			return new Bid(minimumBid, unbidSuit);
 		}
 		if (minimumBid == 1) {
 			return new Bid(minimumBid, unbidSuit);
@@ -58,6 +60,16 @@ public class Rebid1ColorWithNewSuit extends RebidToLevel1Response {
 	private Suit getUnbidSuitWithAtLeast4Cards() {
 		for (Suit color : Suit.list) {
 			if (hand.getSuitLength(color) >= 4 && hasNotBeenBid(color)) {
+				return color;
+			}
+		}
+		return null;
+	}
+
+	private Suit getLowerUnbidSuitWithAtLeast4Cards() {
+		for (Suit color : Suit.list) {
+			if (hand.getSuitLength(color) >= 4 && color.isLowerRankThan(opening.getTrump())
+					&& hasNotBeenBid(color)) {
 				return color;
 			}
 		}

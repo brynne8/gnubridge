@@ -12,9 +12,9 @@ import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Suit;
 
-public class RebidForcing1NT extends RebidToLevel1Response {
+public class RebidAfterForcing1NT extends RebidToLevel1Response {
 
-	public RebidForcing1NT(Auctioneer a, Hand h) {
+	public RebidAfterForcing1NT(Auctioneer a, Hand h) {
 		super(a, h);
 	}
 

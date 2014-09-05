@@ -22,8 +22,8 @@ public abstract class Suit extends Trump {
 	public abstract String toDebugString();
 
 	public boolean isLowerRankThan(Trump other) {
-		if (!other.isSuit()) {
-			return false;
+		if (other.isNoTrump()) {
+			return true;
 		}
 		return getIndex(this) < getIndex(other.asSuit());
 	}
