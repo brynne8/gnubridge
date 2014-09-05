@@ -40,7 +40,9 @@ public class Rebid1ColorWithNewSuit extends RebidToLevel1Response {
 				return new Bid(minimumBid, unbidSuit);
 			}
 			unbidSuit = getLowerUnbidSuitWithAtLeast4Cards();
-			return new Bid(minimumBid, unbidSuit);
+			if (unbidSuit != null) {
+				return new Bid(minimumBid, unbidSuit);
+			}
 		}
 		if (minimumBid == 1) {
 			return new Bid(minimumBid, unbidSuit);

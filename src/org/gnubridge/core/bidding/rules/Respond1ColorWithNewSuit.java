@@ -4,13 +4,15 @@ import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.ResponseCalculator;
+import org.gnubridge.core.deck.Clubs;
+import org.gnubridge.core.deck.Diamonds;
 import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Suit;
 
 public class Respond1ColorWithNewSuit extends Response {
 
 	private ResponseCalculator pc;
-	private Suit highestOver4;
+	private Suit unbidSuit;
 
 	public Respond1ColorWithNewSuit(Auctioneer a, Hand h) {
 		super(a, h);
@@ -21,8 +23,8 @@ public class Respond1ColorWithNewSuit extends Response {
 		boolean result = false;
 		if (super.applies() && partnerBid1Color()) {
 			pc = new ResponseCalculator(hand, partnersOpeningBid);
-			highestOver4 = findHighestColorWithFourOrMoreCards();
-			if (pc.getCombinedPoints() >= 6 && highestOver4 != null) {
+			unbidSuit = findHighestColorWithFourOrMoreCards();
+			if (pc.getCombinedPoints() >= 6 && unbidSuit != null) {
 				result = true;
 			}
 		}
@@ -31,28 +33,36 @@ public class Respond1ColorWithNewSuit extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		Bid result = null;
-		if (pc.getCombinedPoints() >= 17 && hand.getSuitLength(highestOver4) >= 5) {
-			result = new Bid(jumpPartnersBid(), highestOver4);
-			result.makeGameForcing();
-		} else {
-			result = new Bid(1, highestOver4);
-			if (!auction.isValid(result) && pc.getCombinedPoints() >= 13
-					&& hand.getSuitLength(highestOver4) >= 5) {
-				result = new Bid(2, highestOver4);
+		int points = pc.getCombinedPoints();
+		int length = hand.getSuitLength(unbidSuit);
+
+		if (unbidSuit.equals(Diamonds.i()) && points >= 12 && partnersOpeningBid.equals(Clubs.i())) {
+			if (hand.getSuitLength(Diamonds.i()) >= 5 && (length == 6 || hand.getSuitLength(Clubs.i()) >= 4)) {
+				return new Bid(2, unbidSuit);
 			}
-			result.makeForcing();
+		}
+		if (length == 6) {
+			if (points <= 7 && !unbidSuit.equals(Diamonds.i())) {
+				return new Bid(2, unbidSuit);
+			}
 		}
 
-		return result;
-	}
-
-	private int jumpPartnersBid() {
-		if (partnersOpeningBid.greaterThan(new Bid(partnersOpeningBid.getValue(), highestOver4))) {
-			return partnersOpeningBid.getValue() + 2;
+		Bid result = new Bid(1, unbidSuit);
+		if (!auction.isValid(result) && points >= 12) {
+			unbidSuit = findTwoOverOneSuit();
+			if (unbidSuit != null) {
+				return new Bid(2, unbidSuit);
+			}
 		} else {
-			return partnersOpeningBid.getValue() + 1;
+			return result;
 		}
+		
+		unbidSuit = getLowerUnbidSuitWithAtLeast6Cards();
+		if (unbidSuit != null && points >= 9 && points <= 11) {
+			return new Bid(3, unbidSuit);
+		}
+
+		return null;
 	}
 
 	private boolean partnerBid1Color() {
@@ -72,6 +82,29 @@ public class Respond1ColorWithNewSuit extends Response {
 			}
 		}
 		return longer;
+	}
+
+	private Suit findTwoOverOneSuit() {
+		Suit longer = null;
+		for (Suit color : Suit.mmlist) {
+			if (color.isLowerRankThan(partnersOpeningBid.getTrump()) && hand.AisStronger(color, longer)) {
+				longer = color;
+			}
+		}
+		int length = hand.getSuitLength(longer);
+		if (length < 4 || (length == 4 && !partnersOpeningBid.getTrump().equals(Diamonds.i()))) {
+			longer = null;
+		}
+		return longer;
+	}
+
+	private Suit getLowerUnbidSuitWithAtLeast6Cards() {
+		for (Suit color : Suit.mmlist) {
+			if (hand.getSuitLength(color) >= 6 && color.isLowerRankThan(partnersOpeningBid.getTrump())) {
+				return color;
+			}
+		}
+		return null;
 	}
 
 }
