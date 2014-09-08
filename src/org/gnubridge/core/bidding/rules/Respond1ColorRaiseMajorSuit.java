@@ -8,7 +8,7 @@ import org.gnubridge.core.deck.Trump;
 
 public class Respond1ColorRaiseMajorSuit extends Response {
 
-	private ResponseCalculator calculator;
+	private ResponseCalculator calc;
 
 	public Respond1ColorRaiseMajorSuit(Auctioneer a, Hand h) {
 		super(a, h);
@@ -18,9 +18,9 @@ public class Respond1ColorRaiseMajorSuit extends Response {
 	protected boolean applies() {
 		boolean result = false;
 		if (super.applies()) {
-			calculator = new ResponseCalculator(hand, partnersOpeningBid);
+			calc = new ResponseCalculator(hand, partnersOpeningBid);
 			if (partnersOpeningBid.hasTrump() && partnersOpeningBid.getTrump().isMajorSuit()
-					&& partnersOpeningBid.getValue() == 1 && calculator.getCombinedPoints() >= 8
+					&& partnersOpeningBid.getValue() == 1 && calc.getCombinedPoints() >= 8
 					&& hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 3) {
 				result = true;
 			}
@@ -31,7 +31,7 @@ public class Respond1ColorRaiseMajorSuit extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		int points = calculator.getCombinedPoints();
+		int points = calc.getCombinedPoints();
 		Trump trump = partnersOpeningBid.getTrump();
 		if (points >= 10 && points <= 12 && hand.getSuitLength(trump.asSuit()) >= 4) {
 			return new Bid(3, trump);

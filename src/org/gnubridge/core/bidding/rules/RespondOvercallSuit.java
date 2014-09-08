@@ -28,15 +28,16 @@ public class RespondOvercallSuit extends Response {
 
 	@Override
 	protected Bid prepareBid() {
-		ResponseCalculator calculator = new ResponseCalculator(hand, partnersOpeningBid);
+		ResponseCalculator calc = new ResponseCalculator(hand, partnersOpeningBid);
+		int points = calc.getCombinedPoints();
 		if (hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 3) {
-			if (calculator.getCombinedPoints() >= 8 && calculator.getCombinedPoints() <= 11) {
+			if (points >= 8 && points <= 11) {
 				return new Bid(partnersOpeningBid.getValue() + 1, partnersOpeningBid.getTrump());
 			}
-			if (calculator.getCombinedPoints() >= 12 && calculator.getCombinedPoints() <= 14) {
+			if (points >= 12 && points <= 14) {
 				return new Bid(partnersOpeningBid.getValue() + 2, partnersOpeningBid.getTrump());
 			}
-			if (calculator.getCombinedPoints() >= 15) { //Pavlicek is unclear in lesson 7, see tests && partnersOpeningBid.getTrump().isMajorSuit()) {
+			if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && partnersOpeningBid.getTrump().isMajorSuit()) {
 				return new Bid(MAJOR_SUIT_GAME, partnersOpeningBid.getTrump());
 			}
 
@@ -44,27 +45,27 @@ public class RespondOvercallSuit extends Response {
 		List<Suit> suitsWithAtLeast5Cards = hand.getSuitsWithAtLeastCards(5);
 		if (suitsWithAtLeast5Cards.size() > 0) {
 			Suit highestSuitWithAtLeast5Cards = suitsWithAtLeast5Cards.get(0);
-			if (calculator.getCombinedPoints() >= 8 && calculator.getCombinedPoints() <= 11) {
+			if (points >= 8 && points <= 11) {
 				return makeCheapestBid(highestSuitWithAtLeast5Cards);
 			}
-			if (calculator.getCombinedPoints() >= 12 && calculator.getCombinedPoints() <= 14) {
+			if (points >= 12 && points <= 14) {
 				Bid bid = makeCheapestBid(highestSuitWithAtLeast5Cards);
 				return new Bid(bid.getValue() + 1, highestSuitWithAtLeast5Cards);
 			}
-			if (calculator.getCombinedPoints() >= 15) { //Pavlicek is unclear in lesson 7, see tests && highestSuitWithAtLeast5Cards.isMajorSuit()) {
+			if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && highestSuitWithAtLeast5Cards.isMajorSuit()) {
 				return new Bid(MAJOR_SUIT_GAME, highestSuitWithAtLeast5Cards);
 			}
 		}
 
 		if (haveStopperInEnemySuit()) {
-			if (calculator.getCombinedPoints() >= 8 && calculator.getCombinedPoints() <= 11) {
+			if (points >= 8 && points <= 11) {
 				return makeCheapestBid(NOTRUMP);
 			}
-			if (calculator.getCombinedPoints() >= 12 && calculator.getCombinedPoints() <= 14) {
+			if (points >= 12 && points <= 14) {
 				Bid bid = makeCheapestBid(NOTRUMP);
 				return new Bid(bid.getValue() + 1, NOTRUMP);
 			}
-			if (calculator.getCombinedPoints() >= 15) {
+			if (points >= 15) {
 				return new Bid(NOTRUMP_GAME, NOTRUMP);
 			}
 		}

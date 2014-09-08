@@ -28,15 +28,15 @@ public class Rebid1ColorWithNewSuit extends RebidToLevel1Response {
 
 	@Override
 	protected Bid prepareBid() {
-		PointCalculator calculator = new PointCalculator(hand);
+		PointCalculator calc = new PointCalculator(hand);
 		int minimumBid = getMinimumBidInSuit(unbidSuit);
-		if (calculator.getCombinedPoints() >= 19) {
+		if (calc.getCombinedPoints() >= 19) {
 			Bid bid = new Bid(minimumBid + 1, unbidSuit);
 			bid.makeGameForcing();
 			return bid;
 		}
-		if ((minimumBid == 2 && !calculator.isBalanced())) {
-			if (calculator.getCombinedPoints() >= 16) {
+		if ((minimumBid == 2 && !calc.isBalanced())) {
+			if (calc.getCombinedPoints() >= 16) {
 				return new Bid(minimumBid, unbidSuit);
 			}
 			unbidSuit = getLowerUnbidSuitWithAtLeast4Cards();

@@ -10,32 +10,32 @@ import org.gnubridge.core.deck.Suit;
 
 public class OvercallSuit extends BiddingRule {
 
-	private final PointCalculator calculator;
+	private final PointCalculator calc;
 
 	public OvercallSuit(Auctioneer a, Hand h) {
 		super(a, h);
-		calculator = new PointCalculator(hand);
+		calc = new PointCalculator(hand);
 	}
 
 	@Override
 	protected boolean applies() {
 		return (auction.may2ndOvercall() || auction.may4thOvercall())
-				&& calculator.getCombinedPoints() >= 10;
+				&& calc.getCombinedPoints() >= 10;
 	}
 
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
-		if (calculator.getCombinedPoints() < 13) {
+		if (calc.getCombinedPoints() < 13) {
 			return firstValidBid( //
 					bidSuit(1, hand.getSuitsWithAtLeastCards(6)), //
 					bidSuit(1, hand.getDecent5LengthSuits()));
-		} else if (calculator.getCombinedPoints() < 16) {
+		} else if (calc.getCombinedPoints() < 16) {
 			return firstValidBid( //
 					bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
 					bidSuit(2, hand.getSuitsWithAtLeastCards(6)), //
 					bidSuit(2, hand.getGood5LengthSuits()));
-		} else if (calculator.getCombinedPoints() < 19) {
+		} else if (calc.getCombinedPoints() < 19) {
 			return firstValidBid( //
 					bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
 					bidSuit(2, hand.getSuitsWithAtLeastCards(5)));

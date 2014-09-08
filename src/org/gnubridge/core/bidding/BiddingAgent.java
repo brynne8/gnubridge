@@ -12,6 +12,7 @@ import org.gnubridge.core.bidding.rules.Open2NT;
 import org.gnubridge.core.bidding.rules.Overcall1NT;
 import org.gnubridge.core.bidding.rules.OvercallSuit;
 import org.gnubridge.core.bidding.rules.Rebid1ColorOriginalSuit;
+import org.gnubridge.core.bidding.rules.Rebid1ColorRaiseOpener;
 import org.gnubridge.core.bidding.rules.Rebid1ColorRaisePartner;
 import org.gnubridge.core.bidding.rules.Rebid1ColorWithNT;
 import org.gnubridge.core.bidding.rules.Rebid1ColorWithNewSuit;
@@ -56,6 +57,7 @@ public class BiddingAgent {
 		rules.add(new Rebid2NT(a, h));
 		rules.add(new Rebid1NT(a, h));
 		rules.add(new RebidAfterForcing1NT(a, h));
+		rules.add(new Rebid1ColorRaiseOpener(a, h));
 		rules.add(new Rebid1ColorRaisePartner(a, h));
 		rules.add(new Rebid1ColorWithNT(a, h));
 		rules.add(new Rebid1ColorWithNewSuit(a, h));
