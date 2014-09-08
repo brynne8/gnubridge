@@ -21,6 +21,7 @@ import org.gnubridge.core.bidding.rules.Rebid2C;
 import org.gnubridge.core.bidding.rules.Rebid2NT;
 import org.gnubridge.core.bidding.rules.RebidAfter1NT;
 import org.gnubridge.core.bidding.rules.RebidAfterForcing1NT;
+import org.gnubridge.core.bidding.rules.RebidForcing1NT;
 import org.gnubridge.core.bidding.rules.RebidJacobyTransfer;
 import org.gnubridge.core.bidding.rules.RebidMinorSuitStayman;
 import org.gnubridge.core.bidding.rules.RebidStayman;
@@ -66,6 +67,7 @@ public class BiddingAgent {
 		rules.add(new RebidStayman(a, h));
 		rules.add(new RebidJacobyTransfer(a, h));
 		rules.add(new RebidMinorSuitStayman(a, h));
+		rules.add(new RebidForcing1NT(a, h));
 		rules.add(new OvercallSuit(a, h));
 		rules.add(new Overcall1NT(a, h));
 		rules.add(new TakeoutDouble(a, h));

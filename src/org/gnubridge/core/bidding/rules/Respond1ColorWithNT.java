@@ -3,13 +3,13 @@ package org.gnubridge.core.bidding.rules;
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
-import org.gnubridge.core.bidding.PointCalculator;
+import org.gnubridge.core.bidding.ResponseCalculator;
 import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Trump;
 
 public class Respond1ColorWithNT extends Response {
 
-	private PointCalculator calc;
+	private ResponseCalculator calc;
 
 	public Respond1ColorWithNT(Auctioneer a, Hand h) {
 		super(a, h);
@@ -19,9 +19,9 @@ public class Respond1ColorWithNT extends Response {
 	protected boolean applies() {
 		boolean result = false;
 		if (super.applies()) {
-			calc = new PointCalculator(hand);
+			calc = new ResponseCalculator(hand, partnersOpeningBid);
 			if (partnersOpeningBid.getTrump().isSuit() && partnersOpeningBid.getValue() == 1
-					&& calc.getHighCardPoints() >= 6) {
+					&& calc.getCombinedPoints() >= 6) {
 				result = true;
 			}
 		}
