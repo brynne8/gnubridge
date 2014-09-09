@@ -58,7 +58,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 				return new Bid(jumpPartnersBid(), highest);
 			}
 		}
-		
+
 		if (HCP >= 6 && haveStopperInEnemySuit()) {
 			if (HCP < 10) {
 				return new Bid(1, NoTrump.i());
@@ -68,7 +68,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 				return new Bid(3, NoTrump.i());
 			}
 		}
-		
+
 		if (HCP <= 10) {
 			return makeCheapestBid(longestSuit(lastBid));
 		}
@@ -82,7 +82,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 			return opening.getValue() + 1;
 		}
 	}
-	
+
 	private Suit longestSuit(Bid last) {
 		Suit longest = null;
 		for (Suit color : Suit.list) {

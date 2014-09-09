@@ -11,6 +11,7 @@ import org.gnubridge.core.deck.Suit;
 public class OvercallSuit extends BiddingRule {
 
 	private final PointCalculator calc;
+	boolean isFourthOvercall = false;
 
 	public OvercallSuit(Auctioneer a, Hand h) {
 		super(a, h);
@@ -19,28 +20,35 @@ public class OvercallSuit extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		return (auction.may2ndOvercall() || auction.may4thOvercall())
-				&& calc.getCombinedPoints() >= 10;
+		if (calc.getCombinedPoints() >= 8) {
+			if (auction.may2ndOvercall()) {
+				return true;
+			} else if (auction.may4thOvercall()) {
+				isFourthOvercall = true;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	protected Bid prepareBid() {
-		Bid result = null;
-		if (calc.getCombinedPoints() < 13) {
+		int points = calc.getCombinedPoints();
+		if (points < 11) {
 			return firstValidBid( //
 					bidSuit(1, hand.getSuitsWithAtLeastCards(6)), //
 					bidSuit(1, hand.getDecent5LengthSuits()));
-		} else if (calc.getCombinedPoints() < 16) {
-			return firstValidBid( //
-					bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
-					bidSuit(2, hand.getSuitsWithAtLeastCards(6)), //
-					bidSuit(2, hand.getGood5LengthSuits()));
-		} else if (calc.getCombinedPoints() < 19) {
-			return firstValidBid( //
-					bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
-					bidSuit(2, hand.getSuitsWithAtLeastCards(5)));
 		}
-		return result;
+		if (points >= 11 || (isFourthOvercall && points >= 8)) {
+			if (points <= 16) {
+				return firstValidBid( //
+						bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
+						bidSuit(2, hand.getSuitsWithAtLeastCards(6)), //
+						bidSuit(2, hand.getGood5LengthSuits()));
+			}
+		}
+
+		return null;
 	}
 
 	private Bid bidSuit(int bidLevel, Collection<Suit> suits) {

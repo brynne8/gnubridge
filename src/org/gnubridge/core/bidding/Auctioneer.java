@@ -164,18 +164,17 @@ public class Auctioneer {
 	}
 
 	public boolean may2ndOvercall() {
-		if (bidCount == 1) {
-			if (firstBid().is1Suit()) {
-				return true;
+		if (bidCount == 0 || bidCount > 6) {
+			return false;
+		}
+		Bid opening = calls.get(bidCount - 1).getBid();
+		if (opening.is1Suit()) {
+			if (bidCount >= 3) {
+				if(!calls.get(bidCount - 3).isPass()) {
+					opening = calls.get(bidCount - 3).getBid();
+				}
 			}
-		} else if (bidCount == 2) {
-			if (firstBid().isPass() && secondBid().is1Suit()) {
-				return true;
-			}
-		} else if (bidCount == 3) {
-			if (firstBid().isPass() && secondBid().isPass() && thirdBid().is1Suit()) {
-				return true;
-			}
+			return isOpening(opening);
 		}
 		return false;
 	}
@@ -189,18 +188,6 @@ public class Auctioneer {
 			return true;
 		}
 		return false;
-	}
-
-	private Bid thirdBid() {
-		return calls.get(2).getBid();
-	}
-
-	private Bid secondBid() {
-		return calls.get(1).getBid();
-	}
-
-	private Bid firstBid() {
-		return calls.get(0).getBid();
 	}
 
 	private int getCallOrderZeroBased(Bid bid) {
@@ -228,8 +215,19 @@ public class Auctioneer {
 			callOrder--;
 			Call call = calls.get(callOrder);
 			if (!call.isPass()) {
-				if (ourBid || !isOpening(call.getBid())) {
+				if (ourBid) {
 					countPass = -1;
+					break;
+				} else if (isOpening(call.getBid())) {
+					break;
+				}
+				if (callOrder >= 2) {
+					if (isOpening(calls.get(callOrder - 2).getBid())) {
+						break;
+					} else {
+						countPass = -1;
+						break;
+					}
 				}
 				break;
 			}

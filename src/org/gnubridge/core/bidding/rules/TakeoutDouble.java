@@ -21,9 +21,9 @@ public class TakeoutDouble extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		if (((auction.may2ndOvercall() && pc.getHighCardPoints() >= 12) ||
-				(auction.may4thOvercall() && pc.getHighCardPoints() >= 8))
-				&& EachUnbidSuitWithAtLeast3Cards()) {
+		int HCP = pc.getHighCardPoints();
+		if (((auction.may2ndOvercall() && HCP >= 12) || (auction.may4thOvercall() && HCP >= 8))
+				&& (HCP >= 16 || EachUnbidSuitWithAtLeast3Cards())) {
 			return true;
 		}
 		return false;

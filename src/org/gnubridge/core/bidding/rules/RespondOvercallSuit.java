@@ -44,16 +44,16 @@ public class RespondOvercallSuit extends Response {
 		}
 		List<Suit> suitsWithAtLeast5Cards = hand.getSuitsWithAtLeastCards(5);
 		if (suitsWithAtLeast5Cards.size() > 0) {
-			Suit highestSuitWithAtLeast5Cards = suitsWithAtLeast5Cards.get(0);
+			Suit color = suitsWithAtLeast5Cards.get(0);
 			if (points >= 8 && points <= 11) {
-				return makeCheapestBid(highestSuitWithAtLeast5Cards);
+				return makeCheapestBid(color);
 			}
 			if (points >= 12 && points <= 14) {
-				Bid bid = makeCheapestBid(highestSuitWithAtLeast5Cards);
-				return new Bid(bid.getValue() + 1, highestSuitWithAtLeast5Cards);
+				Bid bid = makeCheapestBid(color);
+				return new Bid(bid.getValue() + 1, color);
 			}
 			if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && highestSuitWithAtLeast5Cards.isMajorSuit()) {
-				return new Bid(MAJOR_SUIT_GAME, highestSuitWithAtLeast5Cards);
+				return new Bid(MAJOR_SUIT_GAME, color);
 			}
 		}
 

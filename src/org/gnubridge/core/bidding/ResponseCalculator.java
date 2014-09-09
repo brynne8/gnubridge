@@ -24,19 +24,16 @@ public class ResponseCalculator extends PointCalculator {
 		if (suit.equals(partnersBid.getTrump())) {
 			return 0;
 		}
-		int result = -1;
+		int result = super.distributionalValueForCardsInSuit(suit);
 		if (4 <= hand.getSuitLength(partnersBid.getTrump().asSuit())) {
 			int colorLength = hand.getSuitLength(suit);
 			if (colorLength == 0) {
-				result = 5;
+				result += 2;
 			} else if (colorLength == 1) {
-				result = 3;
+				result += 1;
 			}
 		}
 
-		if (result == -1) {
-			result = super.distributionalValueForCardsInSuit(suit);
-		}
 		return result;
 	}
 
