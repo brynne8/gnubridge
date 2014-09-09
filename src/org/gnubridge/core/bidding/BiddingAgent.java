@@ -47,6 +47,8 @@ public class BiddingAgent {
 		rules.add(new Open2NT(a, h));
 		rules.add(new Open1NT(a, h));
 		rules.add(new Open1Color(a, h));
+		rules.add(new RespondOvercallSuit(a, h));
+		rules.add(new RespondTakeoutDouble(a, h));
 		rules.add(new Respond2C(a, h));
 		rules.add(new Respond2NT(a, h));
 		rules.add(new Respond1NT(a, h));
@@ -71,8 +73,6 @@ public class BiddingAgent {
 		rules.add(new OvercallSuit(a, h));
 		rules.add(new Overcall1NT(a, h));
 		rules.add(new TakeoutDouble(a, h));
-		rules.add(new RespondOvercallSuit(a, h));
-		rules.add(new RespondTakeoutDouble(a, h));
 		rules.add(new AlwaysPass());
 	}
 
