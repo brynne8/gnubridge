@@ -52,6 +52,7 @@ public class Respond2C extends Response {
 
 	@Override
 	protected boolean applies() {
-		return super.applies() && new Bid(2, Clubs.i()).equals(partnersOpeningBid);
+		return super.applies() && new Bid(2, Clubs.i()).equals(partnersOpeningBid)
+				&& auction.isOpening(partnersOpeningBid);
 	}
 }
