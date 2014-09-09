@@ -171,7 +171,7 @@ public class Hand {
 
 	public List<Suit> getSuitsWithAtLeastCards(int minimumSuitLength) {
 		List<Suit> results = new ArrayList<Suit>();
-		for (Suit suit : Suit.mmlist) {
+		for (Suit suit : Suit.mmList) {
 			if (getSuitLength(suit) >= minimumSuitLength) {
 				results.add(suit);
 			}

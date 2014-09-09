@@ -31,7 +31,7 @@ public class RebidAfterForcing1NT extends RebidToLevel1Response {
 		Suit open = opening.getTrump().asSuit();
 		if (HCP >= 19) {
 			Bid result = null;
-			for (Suit color : Suit.mmlist) {
+			for (Suit color : Suit.mmList) {
 				if (color.isLowerRankThan(open) && hand.getSuitLength(color) >= 4) {
 					result = new Bid(3, color);
 					if (auction.isValid(result)) {
@@ -42,7 +42,7 @@ public class RebidAfterForcing1NT extends RebidToLevel1Response {
 			}
 		} else {
 			if (hand.getSuitLength(open) >= 6) {
-				if (hand.getSuitLength(open) == 6 && HCP >= 12 && HCP <= 15) {
+				if (hand.getSuitLength(open) == 6 && HCP <= 15) {
 					return new Bid(2, open);
 				} else if (HCP >= 15 && HCP <= 18) {
 					return new Bid(3, open);
@@ -50,29 +50,27 @@ public class RebidAfterForcing1NT extends RebidToLevel1Response {
 			}
 		}
 		
-		if (open.equals(Hearts.i())) {
-			if (HCP >= 17 && hand.getSuitLength(open) >= 4
-					&& hand.getSuitLength(Spades.i()) >= 5) {
-				return new Bid(2, Spades.i());
-			}
-		}
-		
 		if (HCP >= 18 && pc.isBalanced()) {
 			return new Bid(2, NoTrump.i());
 		}
 		
-		if (HCP >= 12) {
-			if (open.equals(Spades.i()) && hand.getSuitLength(Hearts.i()) >= 4) {
-				return new Bid(2, Hearts.i());
+		if (open.equals(Hearts.i())) {
+			if (HCP >= 17 && hand.getSuitLength(open) >= 5
+					&& hand.getSuitLength(Spades.i()) >= 4) {
+				return new Bid(2, Spades.i());
 			}
-			Suit longer = Clubs.i();
-			if (hand.AisStronger(Diamonds.i(), longer)) {
-				longer = Diamonds.i();
-			}
-			if (hand.getSuitLength(longer) >= 3) {
-				return new Bid(2, longer);
-			}
+		} else if (hand.getSuitLength(Hearts.i()) >= 4) {
+			return new Bid(2, Hearts.i());
 		}
+
+		Suit longer = Clubs.i();
+		if (hand.AisStronger(Diamonds.i(), longer)) {
+			longer = Diamonds.i();
+		}
+		if (hand.getSuitLength(longer) >= 3) {
+			return new Bid(2, longer);
+		}
+
 		return new Pass();
 	}
 

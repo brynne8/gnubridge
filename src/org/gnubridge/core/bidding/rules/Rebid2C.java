@@ -78,7 +78,7 @@ public class Rebid2C extends Rebid {
 	
 	private Bid getLowestBid(int level) {
 		Bid lowest = null;
-		for (Suit color : Suit.mmlist) {
+		for (Suit color : Suit.mmList) {
 			if (hand.getSuitLength(color) >= 5) {
 				lowest = new Bid(getLowestLevel(level, color), color);
 				break;

@@ -23,7 +23,7 @@ public class Respond2C extends Response {
 		Bid result = null;
 		if (pc.getHighCardPoints() >= 8) {
 			Suit longest = null;
-			for (Suit color : Suit.mmlist) {
+			for (Suit color : Suit.mmList) {
 				if (hand.getSuitLength(color) >= 5) {
 					if (hand.AisStronger(color, longest)) {
 						longest = color;

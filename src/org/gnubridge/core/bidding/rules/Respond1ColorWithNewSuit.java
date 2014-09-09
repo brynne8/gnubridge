@@ -86,7 +86,7 @@ public class Respond1ColorWithNewSuit extends Response {
 
 	private Suit findTwoOverOneSuit() {
 		Suit longer = null;
-		for (Suit color : Suit.mmlist) {
+		for (Suit color : Suit.mmList) {
 			if (color.isLowerRankThan(partnersOpeningBid.getTrump()) && hand.AisStronger(color, longer)) {
 				longer = color;
 			}
@@ -99,7 +99,7 @@ public class Respond1ColorWithNewSuit extends Response {
 	}
 
 	private Suit getLowerUnbidSuitWithAtLeast6Cards() {
-		for (Suit color : Suit.mmlist) {
+		for (Suit color : Suit.mmList) {
 			if (hand.getSuitLength(color) >= 6 && color.isLowerRankThan(partnersOpeningBid.getTrump())) {
 				return color;
 			}

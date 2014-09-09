@@ -5,7 +5,7 @@ public abstract class Suit extends Trump {
 	//note, DO NOT USE statics from Trump here, ie SPADES instead of Spades.i()
 	public static final Suit[] list = { Spades.i(), Hearts.i(), Diamonds.i(), Clubs.i() };
 	public static final Suit[] reverseList = { Clubs.i(), Diamonds.i(), Hearts.i(), Spades.i(), };
-	public static final Suit[] mmlist = { Hearts.i(), Spades.i(), Clubs.i(), Diamonds.i() };
+	public static final Suit[] mmList = { Hearts.i(), Spades.i(), Clubs.i(), Diamonds.i() };
 
 	public static int getIndex(Suit denomination) {
 		int result = -1;
