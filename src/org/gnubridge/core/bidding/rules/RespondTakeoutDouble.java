@@ -1,18 +1,22 @@
 package org.gnubridge.core.bidding.rules;
 
+import java.util.Set;
+
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
+import org.gnubridge.core.bidding.Pass;
 import org.gnubridge.core.bidding.PointCalculator;
-import org.gnubridge.core.deck.Diamonds;
+import org.gnubridge.core.deck.Hearts;
 import org.gnubridge.core.deck.NoTrump;
+import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Suit;
 import org.gnubridge.core.deck.Trump;
 
 public class RespondTakeoutDouble extends BiddingRule {
 
 	private PointCalculator pc;
-	private Bid opening;
+	private Bid lastBid;
 	private Suit highest;
 
 	public RespondTakeoutDouble(Auctioneer a, Hand h) {
@@ -25,37 +29,38 @@ public class RespondTakeoutDouble extends BiddingRule {
 		if (auction.getPartnersLastCall() == null) {
 			return false;
 		}
-		Bid partnersOpeningBid = auction.getPartnersLastCall().getBid();
-		return auction.isOvercall(partnersOpeningBid) && partnersOpeningBid.isDouble();
+		Bid partnersBid = auction.getPartnersLastCall().getBid();
+		return auction.isOvercall(partnersBid) && partnersBid.isDouble();
 	}
 
 	@Override
 	protected Bid prepareBid() {
-		opening = auction.getDoubledCall().getBid();
-		highest = null;
+		Bid result = null;
+		lastBid = auction.getDoubledCall().getBid();
+		highest = longestSuit();
 		
 		int HCP = pc.getHighCardPoints();
-		Bid lastBid = auction.getLastCall().getBid();
-		if (HCP >= 9 && HCP <= 12) {
-			int length = 4;
-			for (Suit color : Suit.list) {
-				if (color.equals(Diamonds.i())) {
-					if (highest != null) {
-						return new Bid(jumpPartnersBid(), highest);
-					} else {
-						highest = null;
-						length = 4;
+		if (HCP <= 12 && highest != null) {
+			result = new Bid(levelToBid(), highest);
+			if (!auction.isValid(result)) {
+				if (HCP >= 9) {
+					result = new Bid(levelToBid() + 1, highest);
+				} else {
+					if (hand.getSuitLength(Hearts.i()) >= 4) {
+						highest = Hearts.i();
+						result = new Bid(levelToBid(), highest);
 					}
-				}
-				if (!color.equals(opening.getTrump())
-						&& (lastBid.isPass() || !color.equals(lastBid.getTrump()))) {
-					if (hand.getSuitLength(color) >= length && hand.AisStronger(color, highest)) {
-						highest = color;
+					if (!auction.isValid(result) && hand.getSuitLength(Spades.i()) >= 4) {
+						highest = Spades.i();
+						result = new Bid(levelToBid(), highest);
+						if (!auction.isValid(result)) {
+							result = null;
+						}
 					}
 				}
 			}
-			if (highest != null) {
-				return new Bid(jumpPartnersBid(), highest);
+			if (result != null) {
+				return result;
 			}
 		}
 
@@ -69,26 +74,21 @@ public class RespondTakeoutDouble extends BiddingRule {
 			}
 		}
 
-		if (HCP <= 10) {
-			return makeCheapestBid(longestSuit(lastBid));
-		}
-		return null;
-	}
-
-	private int jumpPartnersBid() {
-		if (opening.greaterThan(new Bid(opening.getValue(), highest))) {
-			return opening.getValue() + 2;
+		Suit enemy = lastBid.getTrump().asSuit();
+		if (HCP >= 10) {
+			return new Bid(lastBid.getValue() + 1, enemy);
+		} else if (hand.isGood5LengthSuits(enemy)) {
+			return new Pass();
 		} else {
-			return opening.getValue() + 1;
+			return makeCheapestBid(desperateSuit());
 		}
 	}
 
-	private Suit longestSuit(Bid last) {
+	private Suit longestSuit() {
 		Suit longest = null;
 		for (Suit color : Suit.list) {
-			if (!color.equals(opening.getTrump())
-					&& (last.isPass() || !color.equals(last.getTrump()))
-					&& hand.getSuitLength(color) >= 3) {
+			if (hasNotBeenBid(color) && (hand.getSuitLength(color) >= 5
+					|| (hand.getSuitLength(color)) == 4 && color.isMajorSuit())) {
 				if (hand.AisStronger(color, longest)) {
 					longest = color;
 				}
@@ -97,15 +97,42 @@ public class RespondTakeoutDouble extends BiddingRule {
 		return longest;
 	}
 
-	private Bid makeCheapestBid(Trump trump) {
-		if (trump == null) {
-			return null;
+	private Suit desperateSuit() {
+		Suit longest = null;
+		for (Suit color : Suit.list) {
+			if (hasNotBeenBid(color) && hand.getSuitLength(color) >= 3) {
+				if (hand.AisStronger(color, longest)) {
+					longest = color;
+				}
+			}
 		}
-		Bid candidate = new Bid(opening.getValue(), trump);
+		return longest;
+	}
+
+	private boolean hasNotBeenBid(Suit suit) {
+		Set<Trump> enemyTrumps = auction.getEnemyTrumps();
+		for (Trump trump : enemyTrumps) {
+			if (suit.equals(trump)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private int levelToBid() {
+		if (lastBid.greaterThan(new Bid(lastBid.getValue(), highest))) {
+			return lastBid.getValue() + 1;
+		} else {
+			return lastBid.getValue();
+		}
+	}
+
+	private Bid makeCheapestBid(Trump trump) {
+		Bid candidate = new Bid(lastBid.getValue(), trump);
 		if (auction.isValid(candidate)) {
 			return candidate;
 		} else {
-			return new Bid(opening.getValue() + 1, trump);
+			return new Bid(lastBid.getValue() + 1, trump);
 		}
 	}
 

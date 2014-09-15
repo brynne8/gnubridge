@@ -222,7 +222,7 @@ public class Auctioneer {
 					break;
 				}
 				if (callOrder >= 2) {
-					if (isOpening(calls.get(callOrder - 2).getBid())) {
+					if (calls.get(callOrder - 1).isPass() && isOpening(calls.get(callOrder - 2).getBid())) {
 						break;
 					} else {
 						countPass = -1;

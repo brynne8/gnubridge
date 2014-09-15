@@ -45,7 +45,7 @@ public class Respond1ColorWithNT extends Response {
 				result.makeForcing();
 			}
 		} else {
-			if (HCP <= 10) {
+			if (HCP >= 6 && HCP <= 10) {
 				result = new Bid(1, NoTrump.i());
 			} else if (HCP >= 11 && HCP <= 12 && calc.isBalanced()) {
 				result = new Bid(2, NoTrump.i());

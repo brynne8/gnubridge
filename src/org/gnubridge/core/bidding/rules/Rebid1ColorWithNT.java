@@ -24,7 +24,7 @@ public class Rebid1ColorWithNT extends RebidToLevel1Response {
 		int HCP = pc.getHighCardPoints();
 		if (HCP >= 12 && HCP <= 14) {
 			return new Bid(1, NoTrump.i());
-		} else if (HCP >= 19 && HCP <= 20) {
+		} else if (HCP >= 18 && HCP <= 19) {
 			return new Bid(2, NoTrump.i());
 		} else {
 			return null;

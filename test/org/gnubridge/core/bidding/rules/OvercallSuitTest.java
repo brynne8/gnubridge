@@ -53,7 +53,7 @@ public class OvercallSuitTest extends TestCase {
 		Auctioneer a = new Auctioneer(West.i());
 		a.bid(ONE_CLUBS);
 		OvercallSuit rule = new OvercallSuit(a, new Hand("7,8", "A,3,2", "K,10,9,3,2", "Q,J,4"));
-		assertEquals(null, rule.getBid());
+		assertEquals(ONE_DIAMONDS, rule.getBid());
 	}
 
 	public void test1DifferentColorAt10to12() {

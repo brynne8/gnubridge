@@ -203,6 +203,12 @@ public class Hand {
 		return result;
 	}
 
+	public boolean isGood5LengthSuits(Suit suit) {
+		List<Card> cardsInSuit = getSuitHi2Low(suit);
+		return getSuitLength(suit) >= 5 &&
+				(isAtLeastAQJXX(cardsInSuit) || isAtLeastKQTXX(cardsInSuit));
+	}
+
 	//at least QJXXX
 	//Pavlicek, lesson 7 online bridge basics
 	public Collection<Suit> getDecent5LengthSuits() {
