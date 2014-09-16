@@ -128,6 +128,9 @@ public class RespondTakeoutDouble extends BiddingRule {
 	}
 
 	private Bid makeCheapestBid(Trump trump) {
+		if (trump == null) {
+			return null;
+		}
 		Bid candidate = new Bid(lastBid.getValue(), trump);
 		if (auction.isValid(candidate)) {
 			return candidate;
