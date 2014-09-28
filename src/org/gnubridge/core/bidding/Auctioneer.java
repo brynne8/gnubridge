@@ -131,10 +131,11 @@ public class Auctioneer {
 		return null;
 	}
 	
-	public Call getDoubledCall() {
-		Call doubledCall = calls.get(bidCount - 3);
+	public Call getDoubledCall(boolean isResponder) {
+		int doubleIndex = isResponder ? bidCount - 2 : bidCount - 4;
+		Call doubledCall = calls.get(doubleIndex - 1);
 		if (doubledCall.isPass()) {
-			doubledCall = calls.get(bidCount - 5);
+			doubledCall = calls.get(doubleIndex - 3);
 		}
 		return doubledCall;
 	}

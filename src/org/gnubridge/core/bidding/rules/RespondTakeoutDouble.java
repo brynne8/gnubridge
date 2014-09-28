@@ -36,7 +36,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
-		lastBid = auction.getDoubledCall().getBid();
+		lastBid = auction.getDoubledCall(true).getBid();
 		highest = longestSuit();
 		
 		int HCP = pc.getHighCardPoints();

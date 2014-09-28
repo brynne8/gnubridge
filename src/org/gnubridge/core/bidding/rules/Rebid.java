@@ -6,6 +6,7 @@ import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.Call;
 
 public abstract class Rebid extends BiddingRule {
+
 	protected Bid response;
 	protected Bid opening;
 
