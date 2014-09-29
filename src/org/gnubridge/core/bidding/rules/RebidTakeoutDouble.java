@@ -57,28 +57,64 @@ public class RebidTakeoutDouble extends BiddingRule {
 					}
 				}
 			} else if (level == 2) {
-				//TODO: puzzled
+				if (points >= 14) {
+					for (Suit suit : hand.getGood5LengthSuits()) {
+						if (!suit.equals(dblTrump) && auction.isValid(new Bid(3, suit))) {
+							return new Bid(3, suit);
+						}
+					}
+					if (calc.isSemiBalanced() && haveStopperInEnemySuit()) {
+						return new Bid(3, NoTrump.i());
+					}
+				}
 			}
 		} else if (new Bid(doubledBid.getValue() + 1, dblTrump).greaterThan(response)) {
 			if (points >= 16) {
 				Bid result = null;
 				for (Suit suit : hand.getGood5LengthSuits()) {
-					if (!suit.equals(dblTrump) && auction.isValid(new Bid(level + 1, suit))) {
-						//TODO
+					if (!suit.equals(dblTrump)) {
+						result = makeCheapestBid(suit);
+						if (auction.isValid(result)) {
+							return result;
+						}
 					}
 				}
 			}
 			if (points >= 19 && calc.isSemiBalanced() && haveStopperInEnemySuit()) {
-				//TODO
+				return makeCheapestBid(NoTrump.i());
 			}
 		} else {
 			if (points >= 16) {
-				if (hand.getSuitLength(trump.asSuit()) >= 3) {
-					//TODO
+				if (hand.getSuitLength(trump.asSuit()) >= 3) { //aggressive
+					if (trump.isMajorSuit()) {
+						return new Bid(4, trump);
+					} else if (calc.getHighCardPoints(hand.getSuitHi2Low(trump.asSuit())) >= 6) {
+						return new Bid(5, trump);
+					}
+				}
+				if (points >= 18 && calc.isBalanced() && haveStopperInEnemySuit()) {
+					return makeCheapestBid(NoTrump.i());
+				}
+				for (Suit suit : hand.getGood5LengthSuits()) {
+					if (!suit.equals(dblTrump) && auction.isValid(new Bid(3, suit))) {
+						return new Bid(3, suit);
+					}
 				}
 			}
 		}
 		return null;
+	}
+
+	private Bid makeCheapestBid(Trump trump) {
+		if (trump == null) {
+			return null;
+		}
+		Bid candidate = new Bid(response.getValue(), trump);
+		if (auction.isValid(candidate)) {
+			return candidate;
+		} else {
+			return new Bid(response.getValue() + 1, trump);
+		}
 	}
 
 }
