@@ -26,6 +26,7 @@ public class BiddingController {
 		parent = p;
 		cardHolder = Deal.construct();
 		auction = new Auctioneer(West.i());
+		auction.setVulnerability(scoringTracker.getVulnerability());
 		view.setAuction(auction);
 		human = cardHolder.selectHumanPlayer();
 		view.setCards(new Hand(human.getHand()));

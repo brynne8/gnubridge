@@ -25,10 +25,10 @@ public class Rebid1NT extends Rebid {
 		Bid result = null;
 		PointCalculator pc = new PointCalculator(hand);
 
-		int rank = response.getValue();
+		int level = response.getValue();
 		Trump trump = response.getTrump();
 		int maximum = fourthOvercalled ? 14 : 17;
-		if (rank == 2) {
+		if (level == 2) {
 			if (trump.equals(Clubs.i())) {
 				if (hand.getSuitLength(Hearts.i()) >= 4) {
 					result = new Bid(2, Hearts.i());
@@ -64,7 +64,7 @@ public class Rebid1NT extends Rebid {
 					result = new Bid(2, Spades.i());
 				}
 			}
-		} else if (rank == 3) {
+		} else if (level == 3) {
 			if (trump.isNoTrump()) {
 				result = new Pass();
 			} else if (hand.getSuitLength(trump.asSuit()) >= 2) {

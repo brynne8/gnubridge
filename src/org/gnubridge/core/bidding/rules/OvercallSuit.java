@@ -39,13 +39,12 @@ public class OvercallSuit extends BiddingRule {
 					bidSuit(1, hand.getSuitsWithAtLeastCards(6)), //
 					bidSuit(1, hand.getDecent5LengthSuits()));
 		}
-		if (points >= 11 || (isFourthOvercall && points >= 8)) {
-			if (points <= 16) {
-				return firstValidBid( //
-						bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
-						bidSuit(2, hand.getSuitsWithAtLeastCards(6)), //
-						bidSuit(2, hand.getGood5LengthSuits()));
-			}
+		if ((points >= 11 && points <= 17) ||
+				(isFourthOvercall && points >= 8 && points <= 14)) {
+			return firstValidBid( //
+					bidSuit(1, hand.getSuitsWithAtLeastCards(5)), //
+					bidSuit(2, hand.getSuitsWithAtLeastCards(6)), //
+					bidSuit(2, hand.getGood5LengthSuits()));
 		}
 
 		return null;

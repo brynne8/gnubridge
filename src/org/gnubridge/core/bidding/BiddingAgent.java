@@ -37,6 +37,7 @@ import org.gnubridge.core.bidding.rules.RespondOvercallSuit;
 import org.gnubridge.core.bidding.rules.RespondTakeoutDouble;
 import org.gnubridge.core.bidding.rules.Strong2C;
 import org.gnubridge.core.bidding.rules.TakeoutDouble;
+import org.gnubridge.core.bidding.rules.WeakTwo;
 
 public class BiddingAgent {
 
@@ -45,6 +46,7 @@ public class BiddingAgent {
 	public BiddingAgent(Auctioneer a, Hand h) {
 		rules = new ArrayList<BiddingRule>();
 		rules.add(new Strong2C(a, h));
+		rules.add(new WeakTwo(a, h));
 		rules.add(new Open2NT(a, h));
 		rules.add(new Open1NT(a, h));
 		rules.add(new Open1Color(a, h));

@@ -20,7 +20,6 @@ public class Respond1ColorRaiseMinorSuit extends Response {
 		if (super.applies()) {
 			calc = new ResponseCalculator(hand, partnersOpeningBid);
 			if (partnersOpeningBid.getTrump().isMinorSuit() && partnersOpeningBid.getValue() == 1
-					&& calc.getCombinedPoints() >= 5
 					&& hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 4) {
 				result = true;
 			}
@@ -35,11 +34,15 @@ public class Respond1ColorRaiseMinorSuit extends Response {
 		if (points >= 10 && (hand.getSuitLength(trump.asSuit()) != 4 
 				|| calc.getHighCardPoints(hand.getSuitHi2Low(trump.asSuit())) > 4)) {
 			return new Bid(2, trump);
-		} else if (hand.getSuitLength(trump.asSuit()) >= 6) {
-			return new Bid(3, trump);
-		} else {
-			return null;
 		}
+		int vulnerabilityIndex = auction.getVulnerabilityIndex();
+		if (hand.getSuitLength(trump.asSuit()) >= 5 && (
+				(vulnerabilityIndex >= 2 && points >= 5 && points <= 9) ||
+				(vulnerabilityIndex == 1 && points <= 8) ||
+				(vulnerabilityIndex == 0 && points >= 5 && points <= 8))) {
+			return new Bid(3, trump);
+		}
+		return null;
 	}
 
 }

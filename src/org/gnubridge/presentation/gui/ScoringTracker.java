@@ -4,6 +4,7 @@ import org.gnubridge.core.Direction;
 import org.gnubridge.core.bidding.Bid;
 import org.gnubridge.core.bidding.ScoreCalculator;
 import org.gnubridge.core.bidding.UsThemVulnerability;
+import org.gnubridge.core.bidding.Vulnerability;
 
 /* This class tracks the score of the human and the computer.
  * It also keeps track of whether or not the human is vulnerable.
@@ -27,8 +28,7 @@ public class ScoringTracker {
 	public void processFinishedGame(int directionOfHuman, Bid highBid, int declarerTricksTaken) {
 		this.directionOfHuman = directionOfHuman;
 
-		ScoreCalculator calculator = new ScoreCalculator(highBid, declarerTricksTaken, usThemVulnerability
-				.asDeclarerDefender(directionOfHuman));
+		ScoreCalculator calculator = new ScoreCalculator(highBid, declarerTricksTaken, getVulnerability());
 
 		latestDeclarerScoreChange = calculator.getDeclarerScore();
 		latestDefenderScoreChange = calculator.getDefenderScore();
@@ -44,6 +44,10 @@ public class ScoringTracker {
 
 	public void setUsThemVulnerability(UsThemVulnerability v) {
 		usThemVulnerability = v;
+	}
+
+	public Vulnerability getVulnerability() {
+		return usThemVulnerability.asDeclarerDefender(directionOfHuman);
 	}
 
 	/* toString for vulnerability */

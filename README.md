@@ -4,7 +4,7 @@ Note, this is not the official version of GNU Bridge. But the playing is still t
 http://bbs.fishc.com/thread-51511-1-1.html
 
 ##Implemented or Partly Implemented Conventions
-Stayman, Minor Suit Stayman, Two-over-One Game Forcing, Jacoby Transfer, Forcing 1NT, Inverted Minor
+Stayman, Minor Suit Stayman, Two-over-One Game Forcing, Jacoby Transfer, Forcing 1NT, Inverted Minor, Takeout Double
 
 ##Users:
 Official Version Download from homepage: gnubridge.org

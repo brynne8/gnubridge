@@ -2,8 +2,6 @@ package org.gnubridge.core.bidding.rules;
 
 import static org.gnubridge.core.deck.Trump.*;
 
-import java.util.List;
-
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
 import org.gnubridge.core.bidding.Bid;
@@ -30,43 +28,69 @@ public class RespondOvercallSuit extends Response {
 	protected Bid prepareBid() {
 		ResponseCalculator calc = new ResponseCalculator(hand, partnersOpeningBid);
 		int points = calc.getCombinedPoints();
-		if (hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) >= 3) {
-			if (points >= 8 && points <= 11) {
-				return new Bid(partnersOpeningBid.getValue() + 1, partnersOpeningBid.getTrump());
-			}
-			if (points >= 12 && points <= 14) {
-				return new Bid(partnersOpeningBid.getValue() + 2, partnersOpeningBid.getTrump());
-			}
-			if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && partnersOpeningBid.getTrump().isMajorSuit()) {
+		int level = partnersOpeningBid.getValue();
+		int length = hand.getSuitLength(partnersOpeningBid.getTrump().asSuit());
+		if (length >= 3) {
+			if (length != 3 && points <= 7 && level == 1 && auction.getVulnerabilityIndex() < 2) {
+				return new Bid(3, partnersOpeningBid.getTrump());
+			} else if (points >= 7 && points <= 14) {
+				Bid result = new Bid(level + 1, partnersOpeningBid.getTrump());
+				if (auction.isValid(result)) {
+					return result;
+				}
+			} else if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && partnersOpeningBid.getTrump().isMajorSuit()) {
 				return new Bid(MAJOR_SUIT_GAME, partnersOpeningBid.getTrump());
 			}
 
 		}
-		List<Suit> suitsWithAtLeast5Cards = hand.getSuitsWithAtLeastCards(5);
-		if (suitsWithAtLeast5Cards.size() > 0) {
-			Suit color = suitsWithAtLeast5Cards.get(0);
-			if (points >= 8 && points <= 11) {
-				return makeCheapestBid(color);
+		if (points >= 8) {
+			if (level == 1) {
+				if (points >= 10) {
+					for (Suit color : hand.getSuitsWithAtLeastCards(5)) {
+						if (auction.isValid(new Bid(2, color))) {
+							return new Bid(2, color);
+						}
+					}
+					if (points <= 12 && calc.isBalanced()) {
+						return makeCheapestBid(NOTRUMP);
+					}
+				} else if (calc.isBalanced() && haveStopperInEnemySuit()) {
+					return makeCheapestBid(NOTRUMP);
+				} else {
+					for (Suit color : hand.getSuitsWithAtLeastCards(4)) {
+						if (auction.isValid(new Bid(1, color))) {
+							return new Bid(1, color);
+						}
+					}
+				}
 			}
-			if (points >= 12 && points <= 14) {
-				Bid bid = makeCheapestBid(color);
-				return new Bid(bid.getValue() + 1, color);
-			}
-			if (points >= 15) { //Pavlicek is unclear in lesson 7, see tests && highestSuitWithAtLeast5Cards.isMajorSuit()) {
-				return new Bid(MAJOR_SUIT_GAME, color);
+			if (level == 2) {
+				for (Suit color : hand.getDecent5LengthSuits()) {
+					if (points >= 13) {
+						return new Bid(3, color);
+					} else if (auction.isValid(new Bid(2, color))) {
+						return new Bid(2, color);
+					}
+				}
 			}
 		}
 
-		if (haveStopperInEnemySuit()) {
-			if (points >= 8 && points <= 11) {
-				return makeCheapestBid(NOTRUMP);
-			}
-			if (points >= 12 && points <= 14) {
-				Bid bid = makeCheapestBid(NOTRUMP);
-				return new Bid(bid.getValue() + 1, NOTRUMP);
-			}
-			if (points >= 15) {
-				return new Bid(NOTRUMP_GAME, NOTRUMP);
+		if (level <= 3 && haveStopperInEnemySuit()) {
+			if (level == 3) {
+				if (points >= 18) {
+					return new Bid(NOTRUMP_GAME, NOTRUMP);
+				}
+			} else {
+				if (points >= 8 && points <= 11) {
+					return makeCheapestBid(NOTRUMP);
+				}
+				if (points >= 12 && points <= 14) {
+					Bid bid = makeCheapestBid(NOTRUMP);
+					return new Bid(bid.getValue() + 1, NOTRUMP);
+				}
+				if (points >= 15) {
+					return new Bid(NOTRUMP_GAME, NOTRUMP);
+				}
 			}
 		}
 		return null;

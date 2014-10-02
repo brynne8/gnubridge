@@ -27,13 +27,13 @@ public class RebidForcing1NT extends PartnersRebid {
 	@Override
 	protected Bid prepareBid() {
 		PointCalculator pc = new PointCalculator(hand);
-		int rank = rebid.getValue();
+		int level = rebid.getValue();
 		int HCP = pc.getHighCardPoints();
 		Trump open  = opening.getTrump();
 		Trump trump = rebid.getTrump();
 		int lengthOfTrump = hand.getSuitLength(open.asSuit());
 		
-		if (rank == 2) {
+		if (level == 2) {
 			if (trump.isNoTrump()) {
 				if (hand.getSuitLength(open.asSuit()) >= 3) {
 					if (HCP >= 8) {

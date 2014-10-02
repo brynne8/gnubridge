@@ -20,6 +20,7 @@ public class Auctioneer {
 	private Call last;
 	private Call beforeLast;
 	private final List<Call> calls;
+	private Vulnerability vulnerability;
 
 	public Auctioneer(Direction firstToBid) {
 		this.nextToBid = firstToBid;
@@ -29,8 +30,24 @@ public class Auctioneer {
 		calls = new ArrayList<Call>();
 	}
 
+	public void setVulnerability(Vulnerability v) {
+		vulnerability = v;
+	}
+
 	public Direction getNextToBid() {
 		return nextToBid;
+	}
+
+	public int getVulnerabilityIndex() {
+		int result = 0;
+		if (nextToBid.getValue() == Direction.NORTH_DEPRECATED || nextToBid.getValue() == Direction.SOUTH_DEPRECATED) {
+			result += vulnerability.isDeclarerVulnerable() ? 2 : 0;
+			result += vulnerability.isDefenderVulnerable() ? 1 : 0;
+		} else {
+			result += vulnerability.isDefenderVulnerable() ? 2 : 0;
+			result += vulnerability.isDeclarerVulnerable() ? 1 : 0;
+		}
+		return result;
 	}
 
 	public List<Call> getCalls() {

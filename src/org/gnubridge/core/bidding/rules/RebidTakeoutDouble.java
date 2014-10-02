@@ -71,7 +71,7 @@ public class RebidTakeoutDouble extends BiddingRule {
 		} else if (new Bid(doubledBid.getValue() + 1, dblTrump).greaterThan(response)) {
 			if (points >= 16) {
 				Bid result = null;
-				for (Suit suit : hand.getGood5LengthSuits()) {
+				for (Suit suit : hand.getDecent5LengthSuits()) {
 					if (!suit.equals(dblTrump)) {
 						result = makeCheapestBid(suit);
 						if (auction.isValid(result)) {

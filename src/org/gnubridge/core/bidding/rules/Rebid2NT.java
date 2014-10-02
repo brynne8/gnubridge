@@ -21,9 +21,9 @@ public class Rebid2NT extends Rebid {
 	protected Bid prepareBid() {
 		Bid result = null;
 
-		int rank = response.getValue();
+		int level = response.getValue();
 		Trump trump = response.getTrump();
-		if (rank == 3) {
+		if (level == 3) {
 			if (trump.isNoTrump()) {
 				result = new Pass();
 			}
