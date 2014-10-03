@@ -77,7 +77,7 @@ public class RespondOvercallSuit extends Response {
 
 		if (level <= 3 && haveStopperInEnemySuit()) {
 			if (level == 3) {
-				if (points >= 18) {
+				if (points >= 18 && calc.isSemiBalanced()) {
 					return new Bid(NOTRUMP_GAME, NOTRUMP);
 				}
 			} else {

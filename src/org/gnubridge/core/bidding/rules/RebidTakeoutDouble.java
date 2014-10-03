@@ -36,7 +36,7 @@ public class RebidTakeoutDouble extends BiddingRule {
 
 	@Override
 	protected Bid prepareBid() {
-		Bid doubledBid = auction.getDoubledCall(false).getBid();
+		Bid doubledBid = auction.enemyCallBeforePartner(response).getBid();
 		ResponseCalculator calc = new ResponseCalculator(hand, response);
 		int level = response.getValue();
 		Trump trump = response.getTrump();

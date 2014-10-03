@@ -24,7 +24,7 @@ public class WeakTwo extends BiddingRule {
 
 	@Override
 	protected boolean applies() {
-		if (auction.isOpeningBid() && pc.getHighCardPoints() >= 6 && pc.getHighCardPoints() <= 11) {
+		if (auction.isOpeningBid() && pc.getHighCardPoints() >= 6) {
 			sixCardSuit = hand.getLongestSuit();
 			List<Card> cards = hand.getSuitHi2Low(sixCardSuit);
 			if (sixCardSuit.equals(Clubs.i()) || hand.getSuitLength(sixCardSuit) < 6

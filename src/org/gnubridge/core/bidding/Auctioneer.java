@@ -147,14 +147,23 @@ public class Auctioneer {
 		}
 		return null;
 	}
-	
-	public Call getDoubledCall(boolean isResponder) {
-		int doubleIndex = isResponder ? bidCount - 2 : bidCount - 4;
-		Call doubledCall = calls.get(doubleIndex - 1);
-		if (doubledCall.isPass()) {
-			doubledCall = calls.get(doubleIndex - 3);
+
+	public Call enemyCallBeforePartner(Bid myBid) {
+		int myOrder;
+		if (myBid == null) {
+			myOrder = bidCount;
+		} else {
+			myOrder = getCallOrderZeroBased(myBid);
 		}
-		return doubledCall;
+		return getDirectEnemyCall(myOrder);
+	}
+	
+	private Call getDirectEnemyCall(int callOrder) {
+		Call enemyCall = calls.get(callOrder - 1);
+		if (enemyCall.isPass()) {
+			enemyCall = calls.get(callOrder - 3);
+		}
+		return enemyCall;
 	}
 
 	/**
