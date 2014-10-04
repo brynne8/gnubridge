@@ -193,10 +193,8 @@ public class Hand {
 	//Pavlicek, lesson 7 online bridge basics
 	public Collection<Suit> getGood5LengthSuits() {
 		Collection<Suit> result = new ArrayList<Suit>();
-		List<Suit> suitsOfLength5 = getSuitsWithCardCount(5);
-		for (Suit suit : suitsOfLength5) {
-			List<Card> cardsInSuit = getSuitHi2Low(suit);
-			if (isAtLeastAQJXX(cardsInSuit) || isAtLeastKQTXX(cardsInSuit)) {
+		for (Suit suit : Suit.list) {
+			if (isGood5LengthSuits(suit)) {
 				result.add(suit);
 			}
 		}
@@ -213,14 +211,18 @@ public class Hand {
 	//Pavlicek, lesson 7 online bridge basics
 	public Collection<Suit> getDecent5LengthSuits() {
 		Collection<Suit> result = new ArrayList<Suit>();
-		List<Suit> suitsOfLength5 = getSuitsWithCardCount(5);
-		for (Suit suit : suitsOfLength5) {
-			List<Card> cardsInSuit = getSuitHi2Low(suit);
-			if (isAtLeastQJXXX(cardsInSuit)) {
+		for (Suit suit : Suit.list) {
+			if (isDecent5LengthSuits(suit)) {
 				result.add(suit);
 			}
 		}
 		return result;
+	}
+
+	public boolean isDecent5LengthSuits(Suit suit) {
+		List<Card> cardsInSuit = getSuitHi2Low(suit);
+		return getSuitLength(suit) >= 5 &&
+				isAtLeastQJXXX(cardsInSuit);
 	}
 
 	private boolean isAtLeastQJXXX(List<Card> fiveCards) {
