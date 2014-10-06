@@ -21,7 +21,8 @@ public class RespondWeakTwo extends Response {
 
 	@Override
 	protected boolean applies() {
-		if (super.applies() && partnersOpeningBid.getValue() == 2 && !partnersOpeningBid.getTrump().equals(Clubs.i())
+		if (super.applies() && auction.isOpening(partnersOpeningBid)
+				&& partnersOpeningBid.getValue() == 2 && !partnersOpeningBid.getTrump().equals(Clubs.i())
 				&& partnersOpeningBid.getTrump().isSuit()) {
 			calc = new ResponseCalculator(hand, partnersOpeningBid);
 			return calc.getCombinedPoints() >= 8;
