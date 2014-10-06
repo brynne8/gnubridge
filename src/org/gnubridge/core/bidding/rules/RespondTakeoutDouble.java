@@ -30,13 +30,18 @@ public class RespondTakeoutDouble extends BiddingRule {
 			return false;
 		}
 		Bid partnersBid = auction.getPartnersLastCall().getBid();
-		return auction.isOvercall(partnersBid) && partnersBid.isDouble();
+		if (auction.isOvercall(partnersBid) && partnersBid.isDouble()) {
+			lastBid = auction.enemyCallBeforePartner(null).getBid();
+			if (!lastBid.getTrump().isNoTrump()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	protected Bid prepareBid() {
 		Bid result = null;
-		lastBid = auction.enemyCallBeforePartner(null).getBid();
 		highest = longestSuit();
 		
 		int HCP = pc.getHighCardPoints();
