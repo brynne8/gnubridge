@@ -195,7 +195,7 @@ public class Auctioneer {
 			return false;
 		}
 		Bid opening = calls.get(bidCount - 1).getBid();
-		if (opening.is1Suit()) {
+		if (opening.getValue() == 1) {
 			if (bidCount >= 3) {
 				if(!calls.get(bidCount - 3).isPass()) {
 					opening = calls.get(bidCount - 3).getBid();
@@ -211,7 +211,7 @@ public class Auctioneer {
 			return false;
 		}
 		Bid opening = calls.get(bidCount - 3).getBid();
-		if (isOpening(opening) && opening.is1Suit()) {
+		if (isOpening(opening) && opening.getValue() == 1) {
 			return true;
 		}
 		return false;

@@ -22,10 +22,24 @@ public class TakeoutDouble extends BiddingRule {
 	@Override
 	protected boolean applies() {
 		int HCP = pc.getHighCardPoints();
-		if (((auction.may2ndOvercall() && HCP >= 12) || (auction.may4thOvercall() && HCP >= 8)) && 
-				(HCP >= 16 || (HCP == 15 && auction.may4thOvercall())
-				|| EachUnbidSuitWithAtLeast3Cards())) {
-			return true;
+		if ((auction.may2ndOvercall() && HCP >= 12) || (auction.may4thOvercall() && HCP >= 8)) {
+			if (auction.getHighBid().getTrump().isNoTrump()) {
+				if (HCP >= 16 && pc.isSemiBalanced()) {
+					boolean allStopped = true;
+					for (Suit color : Suit.list) {
+						if (!hand.haveStopper(color)) {
+							allStopped = false;
+							break;
+						}
+					}
+					if (allStopped) {
+						return true;
+					}
+				}
+			} else {
+				return HCP >= 16 || (HCP == 15 && auction.may4thOvercall()) ||
+						EachUnbidSuitWithAtLeast3Cards();
+			}
 		}
 		return false;
 	}
