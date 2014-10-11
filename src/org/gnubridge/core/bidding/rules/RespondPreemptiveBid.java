@@ -53,7 +53,7 @@ public class RespondPreemptiveBid extends Response {
 				boolean possible = true;
 				for (Suit color : Suit.list) {
 					if (!color.equals(suit) && (hand.getSuitLength(color) < 2
-							 || !hand.haveStopper(color))) {
+							 || !hand.haveStrongStopper(color))) {
 						possible = false;
 						break;
 					}

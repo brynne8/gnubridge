@@ -14,15 +14,15 @@ import org.gnubridge.core.deck.Spades;
 
 public class Respond2NT extends Response {
 
-	private final PointCalculator pc;
+	private PointCalculator pc;
 
 	public Respond2NT(Auctioneer a, Hand h) {
 		super(a, h);
-		pc = new PointCalculator(hand);
 	}
 
 	@Override
 	protected Bid prepareBid() {
+		pc = new PointCalculator(hand);
 		Bid result = null;
 		Suit longer = Hearts.i();
 		int length = hand.getSuitLength(Hearts.i());

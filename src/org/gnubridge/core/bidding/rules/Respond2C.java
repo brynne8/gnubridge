@@ -11,15 +11,15 @@ import org.gnubridge.core.deck.NoTrump;
 
 public class Respond2C extends Response {
 
-	private final PointCalculator pc;
+	private PointCalculator pc;
 
 	public Respond2C(Auctioneer a, Hand h) {
 		super(a, h);
-		pc = new PointCalculator(hand);
 	}
 
 	@Override
 	protected Bid prepareBid() {
+		pc = new PointCalculator(hand);
 		Bid result = null;
 		if (pc.getHighCardPoints() >= 8) {
 			Suit longest = null;

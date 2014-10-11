@@ -99,8 +99,9 @@ public class RespondWeakTwo extends Response {
 			}
 		}
 
-		if (points >= 14) {
-			if (points >= 16 && calc.isSemiBalanced()) {
+		int HCP = calc.getHighCardPoints();
+		if (HCP >= 14) {
+			if (HCP >= 16 && calc.isSemiBalanced()) {
 				boolean allStopped = true;
 				for (Suit color : Suit.list) {
 					if (!color.equals(Diamonds.i()) && !hand.haveStopper(color)) {

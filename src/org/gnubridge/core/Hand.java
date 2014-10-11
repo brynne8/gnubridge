@@ -274,6 +274,33 @@ public class Hand {
 		return false;
 	}
 
+	public boolean haveStrongStopper(Suit suit) {
+		List<Card> cardsInSuit = getSuitHi2Low(suit);
+		int size = cardsInSuit.size();
+		if (size < 2) {
+			return false;
+		} else if (size <= 3) {
+			if (cardsInSuit.get(0).getValue() != Card.ACE && cardsInSuit.get(0).getValue() != Card.KING) {
+				return false;
+			}
+		} else {
+			int bigThree = 0, bigFive = 0;
+			for (int i = 0; i < size; ++i) {
+				int value = cards.get(i).getValue();
+				if (value >= Card.QUEEN) {
+					bigThree++;
+				}
+				if (value >= Card.TEN) {
+					bigFive++;
+				}
+			}
+			if (bigThree < 2 && bigFive < 3) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public boolean AisStronger(Suit A, Suit B) {
 		return (B == null || getSuitLength(A) > getSuitLength(B));
 	}

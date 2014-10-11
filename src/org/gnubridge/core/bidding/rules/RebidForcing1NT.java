@@ -101,8 +101,8 @@ public class RebidForcing1NT extends PartnersRebid {
 						if (pc.isBalanced()) {
 							if (HCP <= 9) {
 								return new Bid(2, NoTrump.i());
-							} else if (hand.haveStopper(Clubs.i())
-									&& hand.haveStopper(Diamonds.i())) {
+							} else if (hand.haveStrongStopper(Clubs.i())
+									&& hand.haveStrongStopper(Diamonds.i())) {
 								return new Bid(3, NoTrump.i());
 							}
 						}

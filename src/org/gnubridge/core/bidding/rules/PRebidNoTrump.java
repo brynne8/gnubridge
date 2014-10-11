@@ -2,6 +2,7 @@ package org.gnubridge.core.bidding.rules;
 
 import org.gnubridge.core.Hand;
 import org.gnubridge.core.bidding.Auctioneer;
+import org.gnubridge.core.bidding.Bid;
 
 public abstract class PRebidNoTrump extends PartnersRebid {
 	
@@ -25,5 +26,8 @@ public abstract class PRebidNoTrump extends PartnersRebid {
 		}
 		return false;
 	}
+
+	@Override
+	abstract protected Bid prepareBid();
 
 }

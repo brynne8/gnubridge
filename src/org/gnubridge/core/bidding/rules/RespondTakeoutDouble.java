@@ -21,7 +21,6 @@ public class RespondTakeoutDouble extends BiddingRule {
 
 	public RespondTakeoutDouble(Auctioneer a, Hand h) {
 		super(a, h);
-		pc = new PointCalculator(hand);
 	}
 
 	@Override
@@ -41,6 +40,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 
 	@Override
 	protected Bid prepareBid() {
+		pc = new PointCalculator(hand);
 		Bid result = null;
 		highest = longestSuit();
 		

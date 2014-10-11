@@ -26,19 +26,24 @@ public class RebidWeakTwo extends Rebid {
 	@Override
 	protected Bid prepareBid() {
 		PointCalculator pc = new PointCalculator(hand);
-		
+
 		int HCP = pc.getHighCardPoints();
 		if (opening.getTrump().equals(Diamonds.i())) {
 			if (HCP >= 9) {
 				if (pc.isSemiBalanced() && hand.isGood5LengthSuits(Diamonds.i())) {
 					return new Bid(3, NoTrump.i());
 				}
+				for (Suit color : Suit.reverseList) {
+					if (hand.getSuitLength(color) <= 1) {
+						return new Bid(3, color);
+					}
+				}
 			}
 			return new Bid(3, Diamonds.i());
 		} else {
 			Suit color = opening.getTrump().asSuit();
 			if (HCP >= 9) {
-				if (pc.getHighCardPoints(hand.getSuitHi2Low(color)) >= 9) {
+				if (pc.getHighCardPoints(hand.getSuitHi2Low(color)) >= 8) {
 					return new Bid(3, NoTrump.i());
 				}
 				if (hand.isGood5LengthSuits(color)) {
