@@ -83,8 +83,7 @@ public class Rebid1NT extends Rebid {
 		if (super.applies()) {
 			return new Bid(1, NoTrump.i()).equals(opening);
 		} else {
-			if (auction.getPartnersLastCall() != null) {
-				opening = auction.getPartnersLastCall().getBid();
+			if (opening != null) {
 				if (auction.isOvercall(opening)) {
 					if (auction.isFourthOvercall(opening)) {
 						fourthOvercalled = true;
