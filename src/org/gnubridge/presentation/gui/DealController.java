@@ -48,14 +48,18 @@ public class DealController implements CardPlayedListener {
 		protected Void doInBackground() throws Exception {
 			start = System.currentTimeMillis();
 			bestMove = findBestMoveAtDepth(1, RIDICULOUSLY_LONG_WAIT_TIME);
-			for (int tricksSearchDepth = 2; tricksSearchDepth <= ProductionSettings.getSearchDepthRecommendation(game); tricksSearchDepth++) {
+			int recommendedDepth = ProductionSettings.getSearchDepthRecommendation(game);
+			for (int tricksSearchDepth = 2; ; tricksSearchDepth *= 2) {
+				if (tricksSearchDepth > recommendedDepth && tricksSearchDepth < 2 * recommendedDepth) {
+					tricksSearchDepth = recommendedDepth;
+				}
 				long timePassedSinceStart = System.currentTimeMillis() - start;
 				long timeRemaining = TIME_ALLOTED_PER_MOVE - timePassedSinceStart;
 				if (!haveEnoughTimeToAttemptNextSearch(timeRemaining)) {
 					System.out.println("// not enough time to attempt next search");
 					break;
 				}
-				System.out.println("// now searching depth: " + tricksSearchDepth);
+//				System.out.println("// now searching depth: " + tricksSearchDepth);
 				try {
 					bestMove = findBestMoveAtDepth(tricksSearchDepth, timeRemaining);
 				} catch (TimeoutException e) {
