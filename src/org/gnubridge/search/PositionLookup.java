@@ -7,15 +7,15 @@ import org.gnubridge.core.Deal;
 
 public class PositionLookup {
 
-	Map<String, byte[]> positions;
+	Map<Long, byte[]> positions;
 	private Deal lastGameLookedUp;
 	private byte[] lastNode;
 
 	public PositionLookup() {
 		try {
-			positions = new WeakHashMap<String, byte[]>(20000000, 0.5f);
+			positions = new WeakHashMap<Long, byte[]>(20000000, 0.5f);
 		} catch (OutOfMemoryError e) {
-			positions = new WeakHashMap<String, byte[]>();
+			positions = new WeakHashMap<Long, byte[]>();
 		}
 	}
 

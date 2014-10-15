@@ -228,11 +228,11 @@ public class DealTest extends TestCase {
 
 	}
 
-	public void testKeyToWeakHashMapNoReferenceRetainedInsideClass() {
-		Deal game = new Deal(NoTrump.i());
-		GameUtils.initializeSingleColorSuits(game);
-		assertFalse(game.getKeyForWeakHashMap() == game.getKeyForWeakHashMap());
-	}
+	//public void testKeyToWeakHashMapNoReferenceRetainedInsideClass() {
+	//	Deal game = new Deal(NoTrump.i());
+	//	GameUtils.initializeSingleColorSuits(game);
+	//	assertFalse(game.getKeyForWeakHashMap() == game.getKeyForWeakHashMap());
+	//}
 
 	public void testKeyToWeakHashMapDoesntChange() {
 		Deal game = new Deal(NoTrump.i());

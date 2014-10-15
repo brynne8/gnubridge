@@ -307,13 +307,12 @@ public class Deal {
 
 	}
 
-	public String getKeyForWeakHashMap() {
-		String cardsPlayedRepresentation = "";
+	public Long getKeyForWeakHashMap() {
+		long unique = 0;
 		for (Card card : getPlayedCards().getCardsHighToLow()) {
-			cardsPlayedRepresentation += card.getIndex() + ",";
+			unique |= (1L << card.getIndex());
 		}
-		String unique = cardsPlayedRepresentation + "*" + getDeclarerTricksTaken() + "*"
-				+ getNextToPlay().getDirection();
+		unique |= ((long)((getNextToPlay().getDirection() << 4) + getDeclarerTricksTaken()) << 52);
 		return unique;
 	}
 
