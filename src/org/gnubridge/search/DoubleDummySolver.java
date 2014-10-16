@@ -109,6 +109,7 @@ public class DoubleDummySolver {
 		if (position.oneTrickLeft()) {
 			node.setCardPlayed(player.getPossibleMoves(position.getCurrentTrick()).get(0));
 			position.playMoves(finalMoves);
+			return;
 		}
 		for (Card card : player.getPossibleMoves(position.getCurrentTrick())) {
 			makeChildNodeForCardPlayed(node, player, card);
@@ -126,9 +127,9 @@ public class DoubleDummySolver {
 			}
 			if (!rootOnlyHasOneValidMove(node) || !terminateIfRootOnlyHasOneValidMove) {
 				for (Node move : node.children) {
-					// TODO later if (!move.isPruned()) {
-					stack.push(move);
-
+					if (!move.isPruned() && !move.trimmed()) {
+						stack.push(move);
+					}
 				}
 			}
 		}

@@ -539,13 +539,13 @@ public class Node {
 	}
 
 	public void nullAllChildrenExceptOne() {
-		//		Node exception = getUnprunedChildWithMostTricksForCurrentPair();
-		//		for (int i = 0; i < children.size(); i++) {
-		//			if (exception == null || !exception.equals(children.get(i))) {
-		//				children.get(i).trimmed = true;
-		//				children.set(i, null);
-		//			}
-		//		}
+		Node exception = getUnprunedChildWithMostTricksForCurrentPair();
+		for (int i = 0; i < children.size(); i++) {
+			if (exception == null || !exception.equals(children.get(i))) {
+				children.get(i).trimmed = true;
+				children.set(i, null);
+			}
+		}
 
 	}
 
@@ -635,13 +635,13 @@ public class Node {
 	}
 
 	public void nullAllSubstandardChildren() {
-		//		Node best = getUnprunedChildWithMostTricksForCurrentPair();
-		//		for (Node child : children) {
-		//			if (child.isPruned() || child.getTricksTaken(getCurrentPair()) < best.getTricksTaken(getCurrentPair())) {
-		//				children.set(children.indexOf(child), null);
-		//				child.trimmed = true;
-		//			}
-		//		}
+		Node best = getUnprunedChildWithMostTricksForCurrentPair();
+		for (Node child : children) {
+			if (child.isPruned() || child.getTricksTaken(getCurrentPair()) < best.getTricksTaken(getCurrentPair())) {
+				children.set(children.indexOf(child), null);
+				child.trimmed = true;
+			}
+		}
 	}
 
 	public void pruneAsSequenceSibling() {
