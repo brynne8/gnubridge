@@ -118,9 +118,9 @@ public class PlayerTest extends TestCase {
 		trick.addCard(Three.of(Diamonds.i()), null);
 		trick.addCard(Ace.of(Clubs.i()), null);
 		List<Card> moves = west.getPossibleMoves(trick);
-		west.play(trick, 3);
-		assertTrue(west.hasPlayedCard(moves.get(3)));
-		assertFalse(west.hasUnplayedCard(moves.get(3)));
+		west.play(trick);
+		assertTrue(west.hasPlayedCard(moves.get(0)));
+		assertFalse(west.hasUnplayedCard(moves.get(0)));
 	}
 
 }

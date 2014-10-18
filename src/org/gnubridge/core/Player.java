@@ -100,9 +100,8 @@ public class Player {
 		return direction;
 	}
 
-	public Card play(Trick trick) {
-		return play(trick, getPossibleMoves(trick).size() - 1);
-
+	public void play(Trick trick) {
+		play(getPossibleMoves(trick).get(0));
 	}
 
 	public boolean hasPlayedCard(Card c) {
@@ -138,16 +137,9 @@ public class Player {
 		return result;
 	}
 
-	public Card play(Trick trick, int moveIndex) {
-		List<Card> moves = getPossibleMoves(trick);
-		if (moves.size() == 0) {
-			System.out.println(this + " has no possible move for " + trick + " (hand: " + getHand() + ")");
-		}
-		Card result = moves.get(moveIndex);
-		played.add(result);
-		hand.remove(hand.indexOf(result));
-		return result;
-
+	public void play(Card c) {
+		played.add(c);
+		hand.remove(hand.indexOf(c));
 	}
 
 	public List<Card> getHand() {

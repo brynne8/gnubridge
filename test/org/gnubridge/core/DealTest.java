@@ -257,11 +257,11 @@ public class DealTest extends TestCase {
 		assertFalse(game2.getKeyForWeakHashMap().equals(game.getKeyForWeakHashMap()));
 	}
 
-	private void playMove(Deal game, List<Integer> moves, List<Card> cards, int i) {
+	private void playMove(Deal game, List<Card> moves, List<Card> cards, int i) {
 		Player player = game.getNextToPlay();
 		Card card = player.getPossibleMoves(game.getCurrentTrick()).get(i);
 		game.playMoves(newList(i));
-		moves.add(i);
+		moves.add(card);
 		cards.add(card);
 	}
 

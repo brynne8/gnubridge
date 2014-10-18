@@ -9,8 +9,6 @@ import org.gnubridge.presentation.GameUtils;
 
 public class Deal {
 
-	private static final int NO_FORCED_MOVE = -1;
-
 	private static Deal preInitializedGame;
 
 	private final Player[] players;
@@ -70,7 +68,7 @@ public class Deal {
 	}
 
 	public void doNextCard() {
-		doNextCard(NO_FORCED_MOVE);
+		doNextCard(players[nextToPlay].getPossibleMoves(currentTrick).get(0));
 	}
 
 	// TODO: test how it interacts with play()
@@ -78,14 +76,8 @@ public class Deal {
 		return playedCards.getSuitHi2Low(color);
 	}
 
-	public void doNextCard(int forcedMoveIndex) {
-		Card card;
-
-		if (forcedMoveIndex == NO_FORCED_MOVE) {
-			card = players[nextToPlay].play(currentTrick);
-		} else {
-			card = players[nextToPlay].play(currentTrick, forcedMoveIndex);
-		}
+	public void doNextCard(Card card) {
+		players[nextToPlay].play(card);
 		playedCards.add(card);
 		currentTrick.addCard(card, players[nextToPlay]); // TODO: test player
 		// assignment
@@ -156,8 +148,8 @@ public class Deal {
 
 	}
 
-	public void playMoves(List<Integer> moves) {
-		for (int move : moves) {
+	public void playMoves(List<Card> moves) {
+		for (Card move : moves) {
 			doNextCard(move);
 		}
 	}
@@ -226,9 +218,7 @@ public class Deal {
 	}
 
 	public void play(Card c) {
-		List<Card> possibleMoves = getNextToPlay().getPossibleMoves(currentTrick);
-		doNextCard(possibleMoves.indexOf(c));
-
+		doNextCard(c);
 	}
 
 	// TODO: note, this is currently only tested by TestPositionLookup
@@ -307,7 +297,7 @@ public class Deal {
 
 	}
 
-	public Long getKeyForWeakHashMap() {
+	public long getKeyForWeakHashMap() {
 		long unique = 0;
 		for (Card card : getPlayedCards().getCardsHighToLow()) {
 			unique |= (1L << card.getIndex());

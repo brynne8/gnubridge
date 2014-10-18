@@ -31,6 +31,10 @@ public class Trick {
 		cards.add(card);
 		players.add(p);
 	}
+	
+	public boolean isStart() {
+		return cards.size() == 0;
+	}
 
 	public boolean isDone() {
 		return cards.size() == 4;

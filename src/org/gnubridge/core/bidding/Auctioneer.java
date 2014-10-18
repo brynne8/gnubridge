@@ -153,9 +153,9 @@ public class Auctioneer {
 		if (myBid == null) {
 			myOrder = bidCount;
 		} else {
-			myOrder = getCallOrderZeroBased(myBid);
+			myOrder = getCallOrderZeroBased(myBid) - 2;
 		}
-		return getDirectEnemyCall(myOrder);
+		return getDirectEnemyCall(myOrder - 2);
 	}
 	
 	private Call getDirectEnemyCall(int callOrder) {
