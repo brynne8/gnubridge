@@ -158,24 +158,22 @@ public class DoubleDummySolver {
 
 	private void removeSiblingsInSequence(Node move) {
 		boolean shouldTrim = false;
-		long moveKey = (1L << move.getCardPlayed().getIndex());
-		int diff = 1;
+		int removeIndex = move.getCardPlayed().getIndex();
+		long moveKey = (1L << removeIndex);
 		while (true) {
-			moveKey <<= 1;
-			if (moveKey % 13 == 0) {
-				break;
+			removeIndex++;
+			if (removeIndex % 13 == 0) {
+				return;
 			}
-			if ((moveKey & currentDealKey) != 0) {
-				diff++;
-			} else {
+			moveKey <<= 1;
+			if ((moveKey & currentDealKey) == 0) {
 				break;
 			}
 		}
 		List<Card> siblingCards = move.getSiblingCards();
-		int moveIndex = move.getCardPlayed().getIndex();
 		for (Card sibling : siblingCards) {
 			int candidate = sibling.getIndex();
-			if (candidate - moveIndex == diff) {
+			if (candidate == removeIndex) {
 				shouldTrim = true;
 				break;
 			}
