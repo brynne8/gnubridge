@@ -32,7 +32,7 @@ public class Node {
 
 	private Card cardPlayed;
 
-	boolean trimmed = false;
+	boolean visited = false;
 
 	private boolean isLeaf = false;
 
@@ -92,15 +92,12 @@ public class Node {
 	public boolean isLastVisitedChild(Node child) {
 		boolean hasThisChild = false;
 		for (Node sibling : children) {
-			if (sibling == null) {
+			if (sibling == null || sibling.isPruned() || sibling.visited()) {
 				continue;
-			}
-			if (sibling == child) {
+			} else if (sibling == child) {
 				hasThisChild = true;
 			} else {
-				if (!sibling.isLeaf() && !sibling.trimmed() && !sibling.isPruned()) {
-					return false;
-				}
+				return false;
 			}
 		}
 		return hasThisChild;
@@ -110,8 +107,8 @@ public class Node {
 		return isLeaf;
 	}
 
-	public boolean trimmed() {
-		return trimmed;
+	private boolean visited() {
+		return visited;
 	}
 
 	public int getCurrentPair() {

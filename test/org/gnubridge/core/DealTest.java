@@ -212,7 +212,7 @@ public class DealTest extends TestCase {
 		GameUtils.initializeSingleColorSuits(original);
 		Deal clone = original.duplicate();
 
-		List<Integer> moves = new ArrayList<Integer>();
+		List<Card> moves = new ArrayList<Card>();
 		List<Card> cards = new ArrayList<Card>();
 
 		playMove(original, moves, cards, 3);
@@ -237,7 +237,7 @@ public class DealTest extends TestCase {
 	public void testKeyToWeakHashMapDoesntChange() {
 		Deal game = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(game);
-		assertTrue(game.getKeyForWeakHashMap().equals(game.getKeyForWeakHashMap()));
+		assertTrue(game.getKeyForWeakHashMap() == game.getKeyForWeakHashMap());
 	}
 
 	public void testTwoDifferentGamesWithSameCards() {
@@ -245,7 +245,7 @@ public class DealTest extends TestCase {
 		GameUtils.initializeSingleColorSuits(game);
 		Deal game2 = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(game2);
-		assertTrue(game2.getKeyForWeakHashMap().equals(game.getKeyForWeakHashMap()));
+		assertTrue(game2.getKeyForWeakHashMap() == game.getKeyForWeakHashMap());
 	}
 
 	public void testTwoDifferentGamesWithSameCardsDifferentMoves() {
@@ -254,21 +254,21 @@ public class DealTest extends TestCase {
 		Deal game2 = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(game2);
 		game2.playOneTrick();
-		assertFalse(game2.getKeyForWeakHashMap().equals(game.getKeyForWeakHashMap()));
+		assertFalse(game2.getKeyForWeakHashMap() == game.getKeyForWeakHashMap());
 	}
 
 	private void playMove(Deal game, List<Card> moves, List<Card> cards, int i) {
 		Player player = game.getNextToPlay();
-		Card card = player.getPossibleMoves(game.getCurrentTrick()).get(i);
-		game.playMoves(newList(i));
-		moves.add(card);
-		cards.add(card);
+		List<Card> possibleMoves = player.getPossibleMoves(game.getCurrentTrick());
+		game.playMoves(newList(possibleMoves, i));
+		moves.add(possibleMoves.get(0));
+		cards.add(possibleMoves.get(0));
 	}
 
-	private List<Integer> newList(int... numbers) {
-		List<Integer> result = new ArrayList<Integer>();
+	private List<Card> newList(List<Card> possibleMoves, int... numbers) {
+		List<Card> result = new ArrayList<Card>();
 		for (int i = 0; i < numbers.length; i++) {
-			result.add(numbers[i]);
+			result.add(possibleMoves.get(i));
 		}
 		return result;
 	}

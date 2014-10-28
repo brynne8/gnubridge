@@ -4,19 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.gnubridge.core.Card;
 import org.gnubridge.core.Deal;
 import org.gnubridge.core.Player;
 import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.presentation.GameUtils;
 
 class MockGame extends Deal {
-	Map<List<Integer>, int[]> values;
+	Map<List<Card>, int[]> values;
 
 	private int[] tricksTaken;
 
 	private int movesWhenDone;
 
-	public MockGame(Map<List<Integer>, int[]> v, int m) {
+	public MockGame(Map<List<Card>, int[]> v, int m) {
 		super(NoTrump.i());
 		values = v;
 		movesWhenDone = m;
@@ -24,11 +25,11 @@ class MockGame extends Deal {
 
 	public MockGame() {
 		super(NoTrump.i());
-		values = new HashMap<List<Integer>, int[]>();
+		values = new HashMap<List<Card>, int[]>();
 		movesWhenDone = -1;
 	}
 
-	public void setPositionValue(List<Integer> moves, int westEast,
+	public void setPositionValue(List<Card> moves, int westEast,
 			int northSouth) {
 		int[] tricks = new int[2];
 		tricks[Player.WEST_EAST] = westEast;
@@ -41,7 +42,7 @@ class MockGame extends Deal {
 		return done;
 	}
 
-	public void playMoves(List<Integer> moves) {
+	public void playMoves(List<Card> moves) {
 		if (done) {
 			return;
 		}

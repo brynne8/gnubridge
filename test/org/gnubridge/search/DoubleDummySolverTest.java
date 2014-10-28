@@ -394,7 +394,7 @@ public class DoubleDummySolverTest extends TestCase {
 		assertEquals(0, grandChild.children.size());
 	}
 
-	public void testTrimRoot() {
+	public void testvisitRoot() {
 		int maxWestTricks = 3;
 		Node root = new Node(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
@@ -405,14 +405,14 @@ public class DoubleDummySolverTest extends TestCase {
 		child2.setTricksTaken(Player.WEST_EAST, maxWestTricks);
 		child2.setTricksTaken(Player.NORTH_SOUTH, 1);
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(root);
-		//		assertEquals("Poor move not trimmed", null, root.children.get(0));
-		//		assertEquals("Good move trimmed", child2, root.children.get(1));
+		s.visit(root);
+		//		assertEquals("Poor move not visited", null, root.children.get(0));
+		//		assertEquals("Good move visited", child2, root.children.get(1));
 		assertEquals(child2, root.getBestMove());
 		assertEquals(maxWestTricks, root.getTricksTaken(Player.WEST_EAST));
 	}
 
-	public void testLastChildCallsParentTrim() {
+	public void testLastChildCallsParentvisit() {
 		Node root = new Node(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
 
@@ -433,14 +433,14 @@ public class DoubleDummySolverTest extends TestCase {
 		grandChild2.setTricksTaken(Player.WEST_EAST, 1);
 		grandChild2.setTricksTaken(Player.NORTH_SOUTH, 2);
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(child2);
-		assertFalse("Trimmed parent even though another child was not visited", root.trimmed());
+		s.visit(child2);
+		assertFalse("visited parent even though another child was not visited", root.visited());
 
-		s.trim(child1);
-		assertTrue(root.trimmed());
+		s.visit(child1);
+		assertTrue(root.visited());
 	}
 
-	public void testNotLastChildNoCallToParentTrim() {
+	public void testNotLastChildNoCallToParentvisit() {
 		MockNode root = new MockNode(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
 
@@ -463,11 +463,11 @@ public class DoubleDummySolverTest extends TestCase {
 		grandChild2.setTricksTaken(Player.NORTH_SOUTH, 2);
 
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(child2);
-		assertFalse(root.trimmed());
+		s.visit(child2);
+		assertFalse(root.visited());
 	}
 
-	public void testMinMaxTrimmingNorthSpoilsWestPlay() {
+	public void testMinMaxvisitmingNorthSpoilsWestPlay() {
 		Node root = new Node(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
 
@@ -475,7 +475,7 @@ public class DoubleDummySolverTest extends TestCase {
 		child1.setPlayerTurn(Direction.NORTH_DEPRECATED);
 		child1.setTricksTaken(Player.WEST_EAST, 4);
 		child1.setTricksTaken(Player.NORTH_SOUTH, 5);
-		child1.trim();
+		child1.visit();
 
 		Node child2 = new Node(root);
 		child2.setPlayerTurn(Direction.NORTH_DEPRECATED);
@@ -491,13 +491,13 @@ public class DoubleDummySolverTest extends TestCase {
 		grandChild2.setTricksTaken(Player.NORTH_SOUTH, 2);
 
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(child2);
+		s.visit(child2);
 		assertEquals(child1.getTricksTaken(root.getCurrentPair()), root.getTricksTaken(root.getCurrentPair()));
 		assertEquals(child1, root.getBestMove());
 		//assertNull(root.children.get(1));
 	}
 
-	public void testMinMaxTrimmingNorthLesserEvil() {
+	public void testMinMaxvisitmingNorthLesserEvil() {
 		Node root = new Node(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
 
@@ -505,7 +505,7 @@ public class DoubleDummySolverTest extends TestCase {
 		child1.setPlayerTurn(Direction.NORTH_DEPRECATED);
 		child1.setTricksTaken(Player.WEST_EAST, 4);
 		child1.setTricksTaken(Player.NORTH_SOUTH, 5);
-		child1.trim();
+		child1.visit();
 
 		Node child2 = new Node(root);
 		child2.setPlayerTurn(Direction.NORTH_DEPRECATED);
@@ -521,14 +521,14 @@ public class DoubleDummySolverTest extends TestCase {
 		grandChild2.setTricksTaken(Player.NORTH_SOUTH, 2);
 
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(child2);
+		s.visit(child2);
 		//assertNull(root.children.get(0));
 		assertEquals(child2, root.getBestMove());
 		assertEquals(grandChild1.getTricksTaken(root.getCurrentPair()), root.getTricksTaken(root.getCurrentPair()));
 
 	}
 
-	public void testTrimTerminatesOnUnexpandedNonLeafNode() {
+	public void testvisitTerminatesOnUnexpandedNonLeafNode() {
 
 		MockNode root = new MockNode(null);
 		root.setPlayerTurn(Direction.WEST_DEPRECATED);
@@ -547,8 +547,8 @@ public class DoubleDummySolverTest extends TestCase {
 		grandChild2.setTricksTaken(Player.WEST_EAST, 1);
 		grandChild2.setTricksTaken(Player.NORTH_SOUTH, 2);
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(child2);
-		assertFalse(root.trimmed());
+		s.visit(child2);
+		assertFalse(root.visited());
 
 	}
 
@@ -561,7 +561,7 @@ public class DoubleDummySolverTest extends TestCase {
 		@SuppressWarnings("unused")
 		Node child2 = new Node(root);
 		DoubleDummySolver s = new DoubleDummySolver(root);
-		s.trim(root);
+		s.visit(root);
 		assertTrue(root.children.get(0).isAlphaPruned());
 		assertTrue(root.children.get(1).isAlphaPruned());
 	}

@@ -14,10 +14,6 @@ public class AlphaBeta implements PruningStrategy {
 			node.betaPrune();
 		}
 
-		if (node.getParent() != null) {
-			prune(node.getParent());
-		}
-
 	}
 
 }

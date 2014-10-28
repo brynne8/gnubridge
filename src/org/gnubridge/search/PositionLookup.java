@@ -10,11 +10,7 @@ public class PositionLookup {
 	private byte[] lastNode;
 
 	public PositionLookup() {
-		try {
-			positions = new WeakHashMap<Long, byte[]>(20000000, 0.5f);
-		} catch (OutOfMemoryError e) {
-			positions = new WeakHashMap<Long, byte[]>();
-		}
+		positions = new WeakHashMap<Long, byte[]>();
 	}
 
 	public byte[] getNode(long uniqueKey) {

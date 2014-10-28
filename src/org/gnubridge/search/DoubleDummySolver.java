@@ -97,11 +97,6 @@ public class DoubleDummySolver {
 		Player player = position.getNextToPlay();
 		node.setPlayerTurn(player.getDirection());
 		node.setPosition(position);
-		if (position.oneTrickLeft()) {
-			List<Card> finalMoves = player.getPossibleMoves(position.getCurrentTrick());
-			node.setCardPlayed(finalMoves.get(0));
-			position.playMoves(finalMoves);
-		}
 		for (Card card : player.getPossibleMoves(position.getCurrentTrick())) {
 			makeChildNodeForCardPlayed(node, player, card);
 		}
@@ -110,10 +105,10 @@ public class DoubleDummySolver {
 		checkDuplicatePositions(node, position);
 		if (position.getTricksPlayed() >= maxTricks || position.isDone() || node.hasIdenticalTwin()) {
 			node.setLeaf(true);
-			prune(node);
+			visit(node);
 		} else {
-			for (Node move : node.children) {
-				if (shouldPruneCardsInSequence) {
+			if (shouldPruneCardsInSequence) {
+				for (Node move : node.children) {
 					//Remove played cards in current trick first
 					for (Card cardInThisTrick : position.getCurrentTrick().getCards()) {
 						currentDealKey &= ~(1L << cardInThisTrick.getIndex());
@@ -192,15 +187,15 @@ public class DoubleDummySolver {
 	 * 4. if last child, then call trim on parent
 	 */
 
-	public void prune(Node node) {
+	public void visit(Node node) {
 		node.calculateValue();
 		for (PruningStrategy pruningStrategy : postEvaluationPruningStrategies) {
 			pruningStrategy.prune(node);
 		}
 		if (node.canPrune()) {
-			prune(node.parent);
+			visit(node.parent);
 		}
-		node.trimmed = true;
+		node.visited = true;
 	}
 
 	private boolean useDuplicateRemoval() {
