@@ -587,6 +587,10 @@ public class Node {
 		setPruned(true, PruneType.PRUNE_BETA);
 	}
 
+	public void pruneAsDefault() {
+		setPruned(true, PruneType.NO_PRUNE);
+	}
+
 	public Node getParent() {
 		return parent;
 	}

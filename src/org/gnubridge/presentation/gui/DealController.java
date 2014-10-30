@@ -20,7 +20,6 @@ public class DealController implements CardPlayedListener {
 	public static int MAX_SECONDS_TO_MOVE = 15;
 	long start = -1;
 	private static final int MILISECONDS_PER_SECOND = 1000;
-	private static final long RIDICULOUSLY_LONG_WAIT_TIME = 100000000;
 	private final long TIME_ALLOTED_PER_MOVE = MAX_SECONDS_TO_MOVE * MILISECONDS_PER_SECOND;
 
 	public class Clock extends Thread {
@@ -47,10 +46,9 @@ public class DealController implements CardPlayedListener {
 		@Override
 		protected Void doInBackground() throws Exception {
 			start = System.currentTimeMillis();
-			bestMove = findBestMoveAtDepth(1, RIDICULOUSLY_LONG_WAIT_TIME);
+			int leastTricks = findLeastTricks();
 			int recommendedDepth = ProductionSettings.getSearchDepthRecommendation(game);
-			int tricksSearchDepth = (recommendedDepth % 2 == 0) ? 2 : 3;
-			for (; tricksSearchDepth <= recommendedDepth; tricksSearchDepth += 2) {
+			for (int tricksSearchDepth = 2; tricksSearchDepth <= recommendedDepth; tricksSearchDepth += 2) {
 				long timePassedSinceStart = System.currentTimeMillis() - start;
 				long timeRemaining = TIME_ALLOTED_PER_MOVE - timePassedSinceStart;
 				if (!haveEnoughTimeToAttemptNextSearch(timeRemaining)) {
@@ -59,7 +57,7 @@ public class DealController implements CardPlayedListener {
 				}
 				System.out.println("// now searching depth: " + tricksSearchDepth);
 				try {
-					bestMove = findBestMoveAtDepth(tricksSearchDepth, timeRemaining);
+					bestMove = findBestMoveAtDepth(tricksSearchDepth, leastTricks, timeRemaining);
 				} catch (TimeoutException e) {
 					System.out.println("// could not complete full search of depth " + tricksSearchDepth
 							+ ", current best: " + bestMove);
@@ -74,9 +72,16 @@ public class DealController implements CardPlayedListener {
 			return timeRemaining > TIME_ALLOTED_PER_MOVE * 2 / 3;
 		}
 
-		private Card findBestMoveAtDepth(int tricksSearchDepth, long timeoutMs) throws InterruptedException,
-				ExecutionException, TimeoutException {
-			SearchWorker searchWorker = new SearchWorker(tricksSearchDepth);
+		private int findLeastTricks() {
+			DoubleDummySolver search = new DoubleDummySolver(game);
+			int result = search.leastTricks();
+			bestMove = search.getBestCard();
+			return result;
+		}
+
+		private Card findBestMoveAtDepth(int tricksSearchDepth, int leastTricks, long timeoutMs)
+				throws InterruptedException, ExecutionException, TimeoutException {
+			SearchWorker searchWorker = new SearchWorker(tricksSearchDepth, leastTricks);
 			searchWorker.execute();
 			return searchWorker.get(timeoutMs, TimeUnit.MILLISECONDS);
 		}
@@ -90,18 +95,20 @@ public class DealController implements CardPlayedListener {
 	public class SearchWorker extends SwingWorker<Card, String> {
 		DoubleDummySolver search;
 		private final int maxTricksSearchDepth;
+		private final int leastTricks;
 
-		public SearchWorker(int maxTricksSearchDepth) {
+		public SearchWorker(int maxTricksSearchDepth, int leastTricks) {
 			this.maxTricksSearchDepth = maxTricksSearchDepth;
-
+			this.leastTricks = leastTricks;
 		}
 
 		@Override
 		protected Card doInBackground() throws Exception {
 			search = new DoubleDummySolver(game);
 			search.setMaxTricks(maxTricksSearchDepth);
+			search.setLeastTricks(leastTricks);
 			search.search();
-			return search.getBestMoves().get(0);
+			return search.getBestCard();
 		}
 	}
 

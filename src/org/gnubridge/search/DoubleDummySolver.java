@@ -23,9 +23,11 @@ public class DoubleDummySolver {
 	private long runningTime;
 
 	private int maxTricks = 13;
+	private int lowTarget = 0;
 
 	private boolean useDuplicateRemoval = true;
 	private boolean shouldPruneCardsInSequence = true;
+	private boolean shouldPruneLowCards = true;
 
 	PositionLookup lookup;
 
@@ -90,6 +92,24 @@ public class DoubleDummySolver {
 		return positionsCount;
 	}
 
+	public int leastTricks() {
+		maxTricks = 1;
+		useDuplicateRemoval = false;
+		//shouldPruneCardsInSequence = false;
+		shouldPruneLowCards = false;
+		root = new Node(null);
+		Node realRoot = root;
+		Deal realGame = game;
+		game = realGame.duplicate();
+		while (!game.isDone()) {
+			examinePosition(root);
+			game.play(getBestCard());
+			root = new Node(null);
+		}
+		root = realRoot;
+		return game.getTricksTaken(root.getCurrentPair());
+	}
+
 	public void examinePosition(Node node) {
 		Deal position = game.duplicate();
 		position.playMoves(node.getMoves());
@@ -114,6 +134,29 @@ public class DoubleDummySolver {
 						currentDealKey &= ~(1L << cardInThisTrick.getIndex());
 					}
 					removeSiblingsInSequence(move);
+				}
+			}
+			if (shouldPruneLowCards && node.getCurrentPair() == root.getCurrentPair()) {
+				int expectedTricks = 12 - position.getTricksPlayed() + 
+						position.getTricksTaken(root.getCurrentPair());
+				if (expectedTricks < lowTarget) {
+					if (expectedTricks == lowTarget - 1) {
+						if (position.getCurrentTrick().getCards().size() >= 2) {
+							for (Node move : node.children) {
+								if (!move.isPruned()) {
+									Card cardOfMove = move.getCardPlayed();
+									position.getCurrentTrick().tryAdd(cardOfMove);
+									Card highest = position.getCurrentTrick().getHighestCard();
+									if (highest != cardOfMove && highest != node.parent.parent.getCardPlayed()) {
+										move.pruneAsDefault();
+									}
+									position.getCurrentTrick().tryRemove();
+								}
+							}
+						}
+					} else {
+						node.pruneAsDefault();
+					}
 				}
 			}
 			if (!rootOnlyHasOneValidMove(node) || !terminateIfRootOnlyHasOneValidMove) {
@@ -202,10 +245,8 @@ public class DoubleDummySolver {
 		return useDuplicateRemoval;
 	}
 
-	public List<Card> getBestMoves() {
-		List<Card> result = new ArrayList<Card>();
-		result.add(root.getBestMove().getCardPlayed());
-		return result;
+	public Card getBestCard() {
+		return root.getBestMove().getCardPlayed();
 	}
 
 	public void printOptimalPath() {
@@ -231,6 +272,10 @@ public class DoubleDummySolver {
 
 	public void setMaxTricks(int i) {
 		maxTricks = i;
+	}
+
+	public void setLeastTricks(int i) {
+		lowTarget = i;
 	}
 
 	public Stack<Node> getStack() {
