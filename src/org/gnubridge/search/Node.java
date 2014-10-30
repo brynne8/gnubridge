@@ -272,7 +272,7 @@ public class Node {
 	}
 
 	public boolean hasAlphaAncestor() {
-		if (parent == null) {
+		if (parent == null || parent.isPruned()) {
 			return false;
 		} else if (parent.isAlpha()) {
 			return true;
@@ -282,7 +282,7 @@ public class Node {
 	}
 
 	public boolean hasBetaAncestor() {
-		if (parent == null) {
+		if (parent == null || parent.isPruned()) {
 			return false;
 		} else if (parent.isBeta()) {
 			return true;
@@ -296,7 +296,7 @@ public class Node {
 	}
 
 	public void betaPrune() {
-		if (parent != null && !parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
+		if (parent != null  && !parent.isPruned() && !parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
 			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
 			parent.setPruned(true, PruneType.PRUNE_BETA);
@@ -306,7 +306,8 @@ public class Node {
 	}
 
 	public void alphaPrune() {
-		if (parent != null && !parent.isAlpha() && !parent.parent.isRoot()) {
+		if (parent != null && !parent.isPruned() && !parent.isAlpha()
+				&& !parent.parent.isRoot()) {
 			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
 			parent.setPruned(true, PruneType.PRUNE_ALPHA);
@@ -394,7 +395,6 @@ public class Node {
 	public boolean shouldBeBetaPruned() {
 		return valueSet && parent != null && parent.parent != null && hasBetaAncestor() && !parent.isBeta()
 				&& (getTricksTaken(getMaxPlayer()) >= parent.getLocalBeta());
-
 	}
 
 	@Override
