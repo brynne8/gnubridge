@@ -153,7 +153,7 @@ public class Auctioneer {
 		if (myBid == null) {
 			myOrder = bidCount;
 		} else {
-			myOrder = getCallOrderZeroBased(myBid) - 2;
+			myOrder = getCallOrderZeroBased(myBid);
 		}
 		return getDirectEnemyCall(myOrder - 2);
 	}

@@ -150,15 +150,20 @@ public class Node {
 		return null;
 	}
 
-	//private Node getNodeWithLowestValueCard(List<Node> nodes) {
-	//	Node lowest = null;
-	//	for (Node node : nodes) {
-	//		if (lowest == null || node.cardPlayed.getValue() < lowest.cardPlayed.getValue()) {
-	//			lowest = node;
-	//		}
-	//	}
-	//	return lowest;
-	//}
+	public Card getLowestCard() {
+		Card lowest = null;
+		for (Node move : children) {
+			Card card = move.getCardPlayed();
+			if (lowest == null) {
+				lowest = card;
+			} else if (lowest.trumps(card, position.getTrump())) {
+				lowest = card;
+			} else if (card.hasSameColorAs(lowest) && !card.hasGreaterValueThan(lowest)) {
+				lowest = card;
+			}
+		}
+		return lowest;
+	}
 
 	public void printOptimalPath(Deal g) {
 		Node move = getBestMove();
