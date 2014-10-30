@@ -549,7 +549,7 @@ public class Node {
 	}
 
 	public boolean canPrune() {
-		return parent != null && (parent.isLastVisitedChild(this));
+		return parent != null && !parent.isPruned() && parent.isLastVisitedChild(this);
 	}
 
 	public void setIdenticalTwin(byte[] node) {

@@ -48,7 +48,7 @@ public class DealController implements CardPlayedListener {
 			start = System.currentTimeMillis();
 			bestMove = findBestMoveAtDepth(1, 15000L);
 			int recommendedDepth = ProductionSettings.getSearchDepthRecommendation(game);
-			for (int tricksSearchDepth = 2; tricksSearchDepth <= recommendedDepth; tricksSearchDepth += 2) {
+			for (int tricksSearchDepth = 2; tricksSearchDepth <= recommendedDepth; tricksSearchDepth++) {
 				long timePassedSinceStart = System.currentTimeMillis() - start;
 				long timeRemaining = TIME_ALLOTED_PER_MOVE - timePassedSinceStart;
 				if (!haveEnoughTimeToAttemptNextSearch(timeRemaining)) {
