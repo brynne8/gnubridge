@@ -294,9 +294,8 @@ public class DoubleDummySolverTest extends TestCase {
 		game.setNextToPlay(Direction.NORTH_DEPRECATED);
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		List<Card> bestMoves = s.getBestMoves();
-		assertEquals(1, bestMoves.size());
-		assertEquals(Two.of(Hearts.i()), bestMoves.get(0));
+		Card bestMove = s.getBestCard();
+		assertEquals(Two.of(Hearts.i()), bestMove);
 	}
 
 	public void testTwoTricks2() {
@@ -308,9 +307,8 @@ public class DoubleDummySolverTest extends TestCase {
 		game.setNextToPlay(Direction.NORTH_DEPRECATED);
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		List<Card> bestMoves = s.getBestMoves();
-		assertEquals(1, bestMoves.size());
-		assertEquals(Two.of(Spades.i()), bestMoves.get(0));
+		Card bestMove = s.getBestCard();
+		assertEquals(Two.of(Spades.i()), bestMove);
 	}
 
 	public void testOneTrick() {

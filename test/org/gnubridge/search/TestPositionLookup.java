@@ -32,9 +32,11 @@ public class TestPositionLookup extends TestCase {
 
 		PositionLookup pl = new PositionLookup();
 		Node node = new Node(null);
-		assertFalse(pl.positionEncountered(g, node.getTricksTaken()));
-		assertTrue(pl.positionEncountered(g, node.getTricksTaken()));
-		assertEquals(node.getTricksTaken(), pl.getNode(g));
+		long uniqueKey = g.getKeyForWeakHashMap();
+		assertNull(pl.getNode(uniqueKey));
+		pl.putNode(uniqueKey, node.getTricksTaken());
+		assertNotNull(pl.getNode(uniqueKey));
+		assertEquals(node.getTricksTaken(), pl.getNode(uniqueKey));
 	}
 
 	@SuppressWarnings("unused")

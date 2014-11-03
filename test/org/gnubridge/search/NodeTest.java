@@ -14,7 +14,6 @@ public class NodeTest extends TestCase {
 		Node root = new Node(null);
 		Node child = new Node(root);
 		assertEquals(1, child.getMoves().size());
-		assertEquals(0, child.getMoves().get(0).intValue());
 	}
 
 	public void testGetMovesSecondChild() {
@@ -23,7 +22,6 @@ public class NodeTest extends TestCase {
 		Node child1 = new Node(root);
 		Node child2 = new Node(root);
 		assertEquals(1, child2.getMoves().size());
-		assertEquals(1, child2.getMoves().get(0).intValue());
 	}
 
 	public void testGetMovesGrandchild() {
@@ -33,8 +31,6 @@ public class NodeTest extends TestCase {
 		Node child2 = new Node(root);
 		Node grandChild = new Node(child2);
 		assertEquals(2, grandChild.getMoves().size());
-		assertEquals(1, grandChild.getMoves().get(0).intValue());
-		assertEquals(0, grandChild.getMoves().get(1).intValue());
 	}
 
 	public void testPrunedIfParentThenChild() {
@@ -88,23 +84,23 @@ class MockNode extends Node {
 		super(parent);
 	}
 
-	public MockNode(Node parent, boolean trim, boolean leaf) {
+	public MockNode(Node parent, boolean visit, boolean leaf) {
 		this(parent);
-		trimmed = trim;
+		visited = visit;
 		isLeaf = leaf;
 	}
 
-	private boolean trimmed = false;
+	private boolean visited = false;
 
 	private boolean isLeaf;
 
-	public void trim() {
-		this.trimmed = true;
+	public void visit() {
+		this.visited = true;
 	}
 
 	@Override
-	public boolean trimmed() {
-		return this.trimmed;
+	public boolean visited() {
+		return this.visited;
 	}
 
 	public boolean isLeaf() {

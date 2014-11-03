@@ -107,7 +107,7 @@ public class Node {
 		return isLeaf;
 	}
 
-	private boolean visited() {
+	public boolean visited() {
 		return visited;
 	}
 
@@ -345,6 +345,8 @@ public class Node {
 		}
 	}
 
+	/* This function is not a recursive function */
+	/* At most it will be called twice */
 	private Node getLocalAlphaNode() {
 		if (isAlpha()) {
 			int max = ALPHA_UNINIT;
