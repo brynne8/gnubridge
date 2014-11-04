@@ -66,7 +66,7 @@ public class Node {
 	}
 
 	public List<Card> getMoves() {
-		if (parent == null) {
+		if (isRoot()) {
 			return new ArrayList<Card>();
 		} else {
 			List<Card> result = parent.getMoves();
@@ -103,8 +103,8 @@ public class Node {
 		return hasThisChild;
 	}
 
-	private boolean isLeaf() {
-		return isLeaf;
+	public boolean valueSet() {
+		return valueSet;
 	}
 
 	public boolean visited() {
@@ -183,7 +183,7 @@ public class Node {
 	}
 
 	public void printLeafs() {
-		if (isLeaf()) {
+		if (isLeaf) {
 			System.out.println("*********\nNode: " + getMoves());
 			System.out.println(printMoves());
 		} else {
@@ -232,7 +232,7 @@ public class Node {
 	}
 
 	public boolean isPruned() {
-		if (parent == null) {
+		if (isRoot()) {
 			return pruned;
 		} else if (pruned) {
 			return true;
@@ -272,7 +272,7 @@ public class Node {
 	}
 
 	public boolean hasAlphaAncestor() {
-		if (parent == null || parent.isPruned()) {
+		if (isRoot() || parent.isPruned()) {
 			return false;
 		} else if (parent.isAlpha()) {
 			return true;
@@ -282,7 +282,7 @@ public class Node {
 	}
 
 	public boolean hasBetaAncestor() {
-		if (parent == null || parent.isPruned()) {
+		if (isRoot() || parent.isPruned()) {
 			return false;
 		} else if (parent.isBeta()) {
 			return true;
@@ -296,7 +296,7 @@ public class Node {
 	}
 
 	public void betaPrune() {
-		if (parent != null  && !parent.isPruned() && !parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
+		if (!isRoot() && !parent.isPruned() && !parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
 			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
 			parent.setPruned(true, PruneType.PRUNE_BETA);
@@ -306,7 +306,7 @@ public class Node {
 	}
 
 	public void alphaPrune() {
-		if (parent != null && !parent.isPruned() && !parent.isAlpha()
+		if (!isRoot() && !parent.isPruned() && !parent.isAlpha()
 				&& !parent.parent.isRoot()) {
 			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
@@ -365,7 +365,7 @@ public class Node {
 
 	private String getUniqueId() {
 		int myIndex = 0;
-		if (parent != null) {
+		if (!isRoot()) {
 			myIndex = parent.getMyIndex(this);
 		}
 		return getDepth() + "-" + myIndex;
@@ -390,12 +390,12 @@ public class Node {
 	}
 
 	public boolean shouldBeAlphaPruned() {
-		return valueSet && parent != null && parent.parent != null && hasAlphaAncestor() && !parent.isAlpha()
+		return valueSet && !isRoot() && !parent.isRoot() && hasAlphaAncestor() && !parent.isAlpha()
 				&& (getTricksTaken(getMaxPlayer()) <= parent.getLocalAlpha());
 	}
 
 	public boolean shouldBeBetaPruned() {
-		return valueSet && parent != null && parent.parent != null && hasBetaAncestor() && !parent.isBeta()
+		return valueSet && !isRoot() && !parent.isRoot() && hasBetaAncestor() && !parent.isBeta()
 				&& (getTricksTaken(getMaxPlayer()) >= parent.getLocalBeta());
 	}
 
@@ -530,12 +530,10 @@ public class Node {
 	}
 
 	public void calculateValue() {
-		if (isLeaf()) {
-			if (hasIdenticalTwin()) {
-				calculateValueFromIdenticalTwin();
-			} else {
-				calculateValueFromPosition();
-			}
+		if (hasIdenticalTwin()) {
+			calculateValueFromIdenticalTwin();
+		} else if (position.getCurrentTrick().isStart()) {
+			calculateValueFromPosition();
 		} else {
 			calculateValueFromChild();
 		}
@@ -551,12 +549,11 @@ public class Node {
 	}
 
 	public boolean canPrune() {
-		return parent != null && !parent.isPruned() && parent.isLastVisitedChild(this);
+		return !isRoot() && !parent.isPruned() && parent.isLastVisitedChild(this);
 	}
 
 	public void setIdenticalTwin(byte[] node) {
 		identicalTwin = node;
-
 	}
 
 	public Node getSiblingNodeForCard(Card card) {

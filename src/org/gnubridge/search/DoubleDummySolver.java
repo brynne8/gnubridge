@@ -106,7 +106,12 @@ public class DoubleDummySolver {
 		if (position.getTricksPlayed() >= maxTricks || position.isDone() || node.hasIdenticalTwin()) {
 			node.setLeaf(true);
 			visit(node);
-		} else {
+			return;
+		}
+		if (position.getCurrentTrick().isStart() && node != root) {
+			visit(node);
+		}
+		if (!node.isPruned()) {
 			if (shouldPruneCardsInSequence) {
 				for (Node move : node.children) {
 					//Remove played cards in current trick first
@@ -139,7 +144,7 @@ public class DoubleDummySolver {
 			byte[] previouslyEncounteredNode = lookup.getNode(currentDealKey);
 			if (previouslyEncounteredNode != null) {
 				node.setIdenticalTwin(previouslyEncounteredNode);
-			} else if (!position.getCurrentTrick().isStart()) {
+			} else if (!position.getCurrentTrick().isStart() && node.valueSet()) {
 				lookup.putNode(currentDealKey, node.getTricksTaken());
 			}
 		}
