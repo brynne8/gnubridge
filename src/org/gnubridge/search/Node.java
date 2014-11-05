@@ -296,23 +296,25 @@ public class Node {
 	}
 
 	public void betaPrune() {
-		if (!isRoot() && !parent.isPruned() && !parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
-			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
-			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
-			parent.setPruned(true, PruneType.PRUNE_BETA);
-			parent.betaPrune();
+		Node node = this;
+		while (!node.isRoot() && !node.parent.isPruned() && !node.parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
+			node = node.parent;
+			node.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
+			node.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
+			node.setPruned(true, PruneType.PRUNE_BETA);
 		}
 
 	}
 
 	public void alphaPrune() {
-		if (!isRoot() && !parent.isPruned() && !parent.isAlpha()
-				&& !parent.parent.isRoot()) {
-			parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
-			parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
-			parent.setPruned(true, PruneType.PRUNE_ALPHA);
-			alphaAtPruneTime = parent.getLocalAlphaNode();
-			parent.alphaPrune();
+		Node node = this;
+		while (!node.isRoot() && !node.parent.isPruned() && !node.parent.isAlpha()
+				&& !node.parent.parent.isRoot()) {
+			node = node.parent;
+			node.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
+			node.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
+			node.setPruned(true, PruneType.PRUNE_ALPHA);
+			alphaAtPruneTime = node.getLocalAlphaNode();
 		}
 
 	}
