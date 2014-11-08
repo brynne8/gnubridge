@@ -32,6 +32,7 @@ public abstract class DoubleDummyScenarioTestCase extends TestCase {
 		if (solver == null) {
 			solver = new DoubleDummySolver(deal);
 			solver.search();
+			System.out.println(solver.getRoot().printAsTree());
 		}
 	}
 
@@ -54,7 +55,7 @@ public abstract class DoubleDummyScenarioTestCase extends TestCase {
 
 	protected void shouldPlay(Direction player, Card card) {
 		solve();
-		assertEquals(card, solver.getBestMoves().get(0));
+		assertEquals(card, solver.getBestCard());
 	}
 
 	protected void followedBy(Direction player, Card card) {

@@ -123,7 +123,7 @@ public class DoubleDummySolver {
 			}
 			if (!rootOnlyHasOneValidMove(node) || !terminateIfRootOnlyHasOneValidMove) {
 				for (Node move : node.children) {
-					if (move != null && !move.isPruned()) {
+					if (move != null && !move.pruned) {
 						stack.push(move);
 					}
 				}

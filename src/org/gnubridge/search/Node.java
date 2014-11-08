@@ -36,7 +36,7 @@ public class Node {
 
 	private boolean isLeaf = false;
 
-	private boolean pruned = false;
+	boolean pruned = false;
 
 	private PruneType pruneType = PruneType.NO_PRUNE;
 
@@ -92,7 +92,7 @@ public class Node {
 	public boolean isLastVisitedChild(Node child) {
 		boolean hasThisChild = false;
 		for (Node sibling : children) {
-			if (sibling == null || sibling.isPruned() || sibling.visited()) {
+			if (sibling == null || sibling.pruned || sibling.visited()) {
 				continue;
 			} else if (sibling == child) {
 				hasThisChild = true;
@@ -142,7 +142,7 @@ public class Node {
 		}
 		int max = getTricksTaken(getCurrentPair());
 		for (Node move : children) {
-			if (move != null && !move.isPruned()
+			if (move != null && !move.pruned
 					&& move.getTricksTaken(getCurrentPair()) == max) {
 				return move;
 			}
@@ -272,7 +272,7 @@ public class Node {
 	}
 
 	public boolean hasAlphaAncestor() {
-		if (isRoot() || parent.isPruned()) {
+		if (isRoot()) {
 			return false;
 		} else if (parent.isAlpha()) {
 			return true;
@@ -282,7 +282,7 @@ public class Node {
 	}
 
 	public boolean hasBetaAncestor() {
-		if (isRoot() || parent.isPruned()) {
+		if (isRoot()) {
 			return false;
 		} else if (parent.isBeta()) {
 			return true;
@@ -297,7 +297,7 @@ public class Node {
 
 	public void betaPrune() {
 		Node node = this;
-		while (!node.isRoot() && !node.parent.isPruned() && !node.parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
+		while (!node.isRoot() && !node.parent.isBeta()) { //&& !parent.parent.isRoot() - always true for beta pruning
 			node = node.parent;
 			node.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			node.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
@@ -308,8 +308,7 @@ public class Node {
 
 	public void alphaPrune() {
 		Node node = this;
-		while (!node.isRoot() && !node.parent.isPruned() && !node.parent.isAlpha()
-				&& !node.parent.parent.isRoot()) {
+		while (!node.isRoot() && !node.parent.isAlpha() && !node.parent.parent.isRoot()) {
 			node = node.parent;
 			node.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 			node.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
@@ -421,7 +420,7 @@ public class Node {
 	}
 
 	public boolean isSequencePruned() {
-		return isPruned() && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS);
+		return pruned && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS);
 	}
 
 	public List<Card> getSiblingCards() {
@@ -430,7 +429,7 @@ public class Node {
 	}
 
 	public boolean isPlayedSequencePruned() {
-		return isPruned() && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
+		return pruned && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
 	}
 
 	public void pruneAsDuplicatePosition() {
@@ -502,7 +501,7 @@ public class Node {
 		Node maxChild = null;
 		for (Node child : children) {
 			if (child != null
-					&& !child.isPruned()
+					&& !child.pruned
 					&& (maxChild == null || child.getTricksTaken(getCurrentPair()) > maxChild
 							.getTricksTaken(getCurrentPair()))) {
 				maxChild = child;
@@ -570,7 +569,7 @@ public class Node {
 	public int getUnprunedChildCount() {
 		int unprunedChildCount = 0;
 		for (Node child : children) {
-			if (!child.isPruned()) {
+			if (!child.pruned) {
 				unprunedChildCount++;
 			}
 		}
