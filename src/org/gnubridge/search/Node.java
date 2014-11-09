@@ -9,46 +9,34 @@ import org.gnubridge.core.Player;
 import org.gnubridge.core.Trick;
 
 public class Node {
+	// Static values
 	public static final byte UNITNITIALIZED = -1;
-
-	private static final byte ALPHA_UNINIT = -1;
-
-	public static final byte BETA_UNINIT = 14;
+	public static final byte ALPHA_UNINIT   = -1;
+	public static final byte BETA_UNINIT    = 14;
 
 	public static enum PruneType {
 		NO_PRUNE, PRUNE_ALPHA, PRUNE_BETA, PRUNE_SEQUENCE_SIBLINGS,
 		PRUNE_SEQUENCE_SIBLINGS_PLAYED, PRUNE_DUPLICATE_POSITION
 	}
 
-	int value;
+	//Data of the node
+	private Deal         position;                   //Current position
+	        int          value;                      //Unknown meaning
+	        Node         parent;                     //Parent node
+	        List<Node>   children;                   //ArrayList of child nodes
+	private byte         playerTurn;                 //The player to play
+	private final byte[] tricksTaken = new byte[2];  //Tricks WE|NS:
+	private Card         cardPlayed;                 //The card played on this node
+	private Player       playerCardPlayed;           //The player who played the card
+	private byte[]       identicalTwin;              //The tricks taken by an identical twin
+	private Node         alphaAtPruneTime;           //The local alpha node while pruning
 
-	Node parent;
-
-	List<Node> children;
-
-	private byte playerTurn;
-
-	private final byte[] tricksTaken = new byte[2];
-
-	private Card cardPlayed;
-
-	boolean visited = false;
-
-	private boolean isLeaf = false;
-
-	boolean pruned = false;
-
+	//Flags
+	        boolean   visited   = false;
+	        boolean   pruned    = false;
+	private boolean   isLeaf    = false;
 	private PruneType pruneType = PruneType.NO_PRUNE;
-
-	private Player playerCardPlayed;
-
-	private boolean valueSet = false;
-
-	private Deal position;
-
-	private byte[] identicalTwin;
-
-	private Node alphaAtPruneTime;
+	private boolean   valueSet  = false;
 
 	public Node(Node parent) {
 		this.parent = parent;
@@ -75,13 +63,8 @@ public class Node {
 		}
 	}
 
-	private int getMyIndex(Node node) {
-		return children.indexOf(node);
-	}
-
 	public void setPlayerTurn(int direction) {
 		this.playerTurn = (byte) direction;
-
 	}
 
 	public void setTricksTaken(int pair, int i) {
@@ -101,30 +84,6 @@ public class Node {
 			}
 		}
 		return hasThisChild;
-	}
-
-	public boolean valueSet() {
-		return valueSet;
-	}
-
-	public boolean visited() {
-		return visited;
-	}
-
-	public int getCurrentPair() {
-		return Player.matchPair(getPlayerTurn());
-	}
-
-	public int getPlayerTurn() {
-		return this.playerTurn;
-	}
-
-	public int getTricksTaken(int pair) {
-		return tricksTaken[pair];
-	}
-
-	public byte[] getTricksTaken() {
-		return tricksTaken;
 	}
 
 	public void setCardPlayed(Card card) {
@@ -148,21 +107,6 @@ public class Node {
 			}
 		}
 		return null;
-	}
-
-	public Card getLowestCard() {
-		Card lowest = null;
-		for (Node move : children) {
-			Card card = move.getCardPlayed();
-			if (lowest == null) {
-				lowest = card;
-			} else if (lowest.trumps(card, position.getTrump())) {
-				lowest = card;
-			} else if (card.hasSameColorAs(lowest) && !card.hasGreaterValueThan(lowest)) {
-				lowest = card;
-			}
-		}
-		return lowest;
 	}
 
 	public void printOptimalPath(Deal g) {
@@ -217,13 +161,8 @@ public class Node {
 		return result;
 	}
 
-	private boolean isRoot() {
-		return parent == null;
-	}
-
 	public void setLeaf(boolean b) {
 		isLeaf = b;
-
 	}
 
 	private void setPruned(boolean b, PruneType type) {
@@ -298,13 +237,13 @@ public class Node {
 	public void betaPrune() {
 		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
-		parent.setPruned(true, PruneType.PRUNE_ALPHA);
+		parent.pruneAsBeta();
 	}
 
 	public void alphaPrune() {
 		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
-		parent.setPruned(true, PruneType.PRUNE_ALPHA);
+		parent.pruneAsAlpha();
 		alphaAtPruneTime = parent.getLocalAlphaNode();
 	}
 
@@ -582,10 +521,43 @@ public class Node {
 		setPruned(true, PruneType.PRUNE_BETA);
 	}
 
-	public void pruneAsDefault() {
-		setPruned(true, PruneType.NO_PRUNE);
+	// Utilities (Non-modifying)
+
+	/** Get index for a child node.
+	 * @param node a child node
+	 * @return     index of the node  */
+	private int getMyIndex(Node node) {
+		return children.indexOf(node);
 	}
 
+	private boolean isRoot() {
+		return parent == null;
+	}
+
+	public boolean valueSet() {
+		return valueSet;
+	}
+
+	public boolean visited() {
+		return visited;
+	}
+
+	public int getCurrentPair() {
+		return Player.matchPair(getPlayerTurn());
+	}
+
+	public int getPlayerTurn() {
+		return this.playerTurn;
+	}
+
+	public int getTricksTaken(int pair) {
+		return tricksTaken[pair];
+	}
+
+	public byte[] getTricksTaken() {
+		return tricksTaken;
+	}
+	
 	public Node getParent() {
 		return parent;
 	}

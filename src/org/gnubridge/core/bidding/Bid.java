@@ -192,7 +192,8 @@ public class Bid {
 	}
 
 	/**
-	 * Useful to distinguish Pass, Double, and Redouble
+	 * @return false if the bid is Pass, Double, or Redouble;
+	 *         otherwise true
 	 */
 	public boolean hasTrump() {
 		return getTrump() != null;
