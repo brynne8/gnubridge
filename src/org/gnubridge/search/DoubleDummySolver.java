@@ -189,16 +189,13 @@ public class DoubleDummySolver {
 	 * 1. evaluate all child nodes and find one where current player or his partner takes the most tricks. 
 	 * 2. delete all other nodes 
 	 * 3. set tricks taken on current node to the value of the child selected in 1. 
-	 * 4. if last child, then call trim on parent
+	 * 4. if last child, then call visit on parent
 	 */
 
 	public void visit(Node node) {
 		node.calculateValue();
 		for (PruningStrategy pruningStrategy : postEvaluationPruningStrategies) {
 			pruningStrategy.prune(node);
-		}
-		if (node.canPrune()) {
-			visit(node.parent);
 		}
 		node.visited = true;
 	}

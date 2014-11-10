@@ -180,10 +180,6 @@ public class Node {
 		}
 	}
 
-	public boolean isAlpha() {
-		return getMaxPlayer() == getCurrentPair();
-	}
-
 	Node getRoot() {
 		if (parent == null) {
 			return this;
@@ -230,10 +226,6 @@ public class Node {
 		}
 	}
 
-	boolean isBeta() {
-		return !isAlpha();
-	}
-
 	public void betaPrune() {
 		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
@@ -269,14 +261,14 @@ public class Node {
 	public int getLocalAlpha() {
 		Node localAlpha = getLocalAlphaNode();
 		if (localAlpha != null) {
-			return getLocalAlphaNode().getTricksTaken(getMaxPlayer());
+			return localAlpha.getTricksTaken(getMaxPlayer());
 		} else {
 			return ALPHA_UNINIT;
 		}
 	}
 
-	/* This function is not a recursive function */
-	/* At most it will be called twice */
+	/** This function is not a recursive function. 
+	 * At most it will be called twice */
 	private Node getLocalAlphaNode() {
 		if (isAlpha()) {
 			int max = ALPHA_UNINIT;
@@ -319,33 +311,11 @@ public class Node {
 		return getRoot().getCurrentPair();
 	}
 
-	public boolean shouldBeAlphaPruned() {
-		return valueSet && !isRoot() && !parent.isRoot() && hasAlphaAncestor() && !parent.isAlpha()
-				&& (getTricksTaken(getMaxPlayer()) <= parent.getLocalAlpha());
-	}
-
-	public boolean shouldBeBetaPruned() {
-		return valueSet && !isRoot() && !parent.isRoot() && hasBetaAncestor() && !parent.isBeta()
-				&& (getTricksTaken(getMaxPlayer()) >= parent.getLocalBeta());
-	}
-
 	@Override
 	public String toString() {
 		return "Node " + getMoves().toString() + " / pruning status: " + isPruned() + " " + pruneTypeToString() + " / "
 				+ getPlayerCardPlayed() + ": " + getCardPlayed() + " Tricks WE|NS: " + getTricksTaken()[0] + "|"
 				+ getTricksTaken()[1];
-	}
-
-	private List<Node> siblings() {
-		List<Node> result = new ArrayList<Node>();
-		if (parent != null) {
-			for (Node node : parent.children) {
-				if (!node.equals(this)) {
-					result.add(node);
-				}
-			}
-		}
-		return result;
 	}
 
 	public boolean isSequencePruned() {
@@ -359,17 +329,6 @@ public class Node {
 
 	public boolean isPlayedSequencePruned() {
 		return pruned && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
-	}
-
-	public void pruneAsDuplicatePosition() {
-		setPruned(false, PruneType.PRUNE_DUPLICATE_POSITION);
-
-	}
-
-	public boolean isPrunedDuplicatePosition() {
-		// return isPruned() && (getPruneType() == PRUNE_DUPLICATE_POSITION);
-		// return (pruneType == PRUNE_DUPLICATE_POSITION);
-		return hasIdenticalTwin();
 	}
 
 	public String toDebugString() {
@@ -444,15 +403,12 @@ public class Node {
 		if (maxChild != null) {
 			setTricksTaken(Player.WEST_EAST, maxChild.getTricksTaken(Player.WEST_EAST));
 			setTricksTaken(Player.NORTH_SOUTH, maxChild.getTricksTaken(Player.NORTH_SOUTH));
-
 		}
-
 	}
 
 	public void calculateValueFromPosition() {
 		setTricksTaken(Player.WEST_EAST, position.getTricksTaken(Player.WEST_EAST));
 		setTricksTaken(Player.NORTH_SOUTH, position.getTricksTaken(Player.NORTH_SOUTH));
-
 	}
 
 	public void setPosition(Deal position) {
@@ -474,25 +430,8 @@ public class Node {
 		setTricksTaken(Player.WEST_EAST, identicalTwin[Player.WEST_EAST]);
 	}
 
-	boolean hasIdenticalTwin() {
-		return identicalTwin != null;
-	}
-
-	public boolean canPrune() {
-		return !isRoot() && !parent.isPruned() && parent.isLastVisitedChild(this);
-	}
-
 	public void setIdenticalTwin(byte[] node) {
 		identicalTwin = node;
-	}
-
-	public Node getSiblingNodeForCard(Card card) {
-		for (Node sibling : siblings()) {
-			if (sibling.getCardPlayed().equals(card)) {
-				return sibling;
-			}
-		}
-		throw new RuntimeException("Cannot find appropriate sibling node");
 	}
 
 	public int getUnprunedChildCount() {
@@ -505,12 +444,26 @@ public class Node {
 		return unprunedChildCount;
 	}
 
+	public boolean shouldBeAlphaPruned() {
+		return valueSet && !isRoot() && !parent.isRoot() && hasAlphaAncestor() && !parent.isAlpha()
+				&& (getTricksTaken(getMaxPlayer()) <= parent.getLocalAlpha());
+	}
+
+	public boolean shouldBeBetaPruned() {
+		return valueSet && !isRoot() && !parent.isRoot() && hasBetaAncestor() && !parent.isBeta()
+				&& (getTricksTaken(getMaxPlayer()) >= parent.getLocalBeta());
+	}
+
 	public void pruneAsSequenceSibling() {
 		setPruned(true, PruneType.PRUNE_SEQUENCE_SIBLINGS);
 	}
 
 	public void pruneAsSequenceSiblingPlayed() {
 		setPruned(true, PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
+	}
+
+	public void pruneAsDuplicatePosition() {
+		setPruned(false, PruneType.PRUNE_DUPLICATE_POSITION);
 	}
 
 	public void pruneAsAlpha() {
@@ -534,12 +487,24 @@ public class Node {
 		return parent == null;
 	}
 
+	public boolean isAlpha() {
+		return getMaxPlayer() == getCurrentPair();
+	}
+
+	boolean isBeta() {
+		return !isAlpha();
+	}
+
 	public boolean valueSet() {
 		return valueSet;
 	}
 
 	public boolean visited() {
 		return visited;
+	}
+
+	boolean hasIdenticalTwin() {
+		return identicalTwin != null;
 	}
 
 	public int getCurrentPair() {
