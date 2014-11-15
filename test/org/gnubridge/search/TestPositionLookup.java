@@ -39,7 +39,6 @@ public class TestPositionLookup extends TestCase {
 		assertEquals(node.getTricksTaken(), pl.getNode(uniqueKey));
 	}
 
-	@SuppressWarnings("unused")
 	public void testOnlyReturnFirstNodeEncountetredForThePosition() {
 		Deal g = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(g);
@@ -47,32 +46,31 @@ public class TestPositionLookup extends TestCase {
 
 		PositionLookup pl = new PositionLookup();
 		Node node = new Node(null);
-		boolean justPresentThePosition = pl.positionEncountered(g, node.getTricksTaken());
+		pl.putNode(g.getKeyForWeakHashMap(), node.getTricksTaken());
 
 		Deal identicalTwin = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(identicalTwin);
 		identicalTwin.playOneTrick();
 
-		Node identicalTwinNode = new Node(null);
-		assertTrue(pl.positionEncountered(identicalTwin, identicalTwinNode.getTricksTaken()));
-		assertEquals(node.getTricksTaken(), pl.getNode(identicalTwin));
+		long uniqueKey = identicalTwin.getKeyForWeakHashMap();
+		assertNotNull(pl.getNode(uniqueKey));
+		assertEquals(node.getTricksTaken(), pl.getNode(uniqueKey));
 
 	}
 
-	@SuppressWarnings("unused")
 	public void testDistinguishDifferentPlays() {
 		Deal g = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(g);
 		g.playOneTrick();
 
 		PositionLookup pl = new PositionLookup();
-		boolean justPresentThePosition = pl.positionEncountered(g, null);
+		pl.putNode(g.getKeyForWeakHashMap(), null);
 
 		Deal g2 = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(g2);
 		playOneTrickWithSlightTwist(g2);
 
-		assertFalse(pl.positionEncountered(g2, null));
+		assertNull(pl.getNode(g2.getKeyForWeakHashMap()));
 	}
 
 	private void playOneTrickWithSlightTwist(Deal g2) {
@@ -83,7 +81,6 @@ public class TestPositionLookup extends TestCase {
 
 	}
 
-	@SuppressWarnings("unused")
 	public void testOneCardPlayedDifferentObjectsSamePosition() {
 		Deal g = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(g);
@@ -91,13 +88,14 @@ public class TestPositionLookup extends TestCase {
 
 		PositionLookup pl = new PositionLookup();
 		Node node = new Node(null);
-		boolean justPresentThePosition = pl.positionEncountered(g, node.getTricksTaken());
+		pl.putNode(g.getKeyForWeakHashMap(), node.getTricksTaken());
 
 		Deal g2 = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(g2);
 		g2.playOneTrick();
-		assertTrue(pl.positionEncountered(g2, null));
-		assertEquals(node.getTricksTaken(), pl.getNode(g2));
+		long uniqueKey = g2.getKeyForWeakHashMap();
+		assertNotNull(pl.getNode(uniqueKey));
+		assertEquals(node.getTricksTaken(), pl.getNode(uniqueKey));
 	}
 
 	public void testOneCardPlayedDifferentCards() {
@@ -106,13 +104,12 @@ public class TestPositionLookup extends TestCase {
 		g.play(g.getNextToPlay().getHand().get(0));
 
 		PositionLookup pl = new PositionLookup();
-		@SuppressWarnings("unused")
-		boolean justPresentThePosition = pl.positionEncountered(g, null);
+		pl.putNode(g.getKeyForWeakHashMap(), null);
 
 		Deal gameWithDifferentCardPlayed = new Deal(NoTrump.i());
 		GameUtils.initializeSingleColorSuits(gameWithDifferentCardPlayed);
 		gameWithDifferentCardPlayed.play(gameWithDifferentCardPlayed.getNextToPlay().getHand().get(1));
-		assertFalse(pl.positionEncountered(gameWithDifferentCardPlayed, null));
+		assertNull(pl.getNode(gameWithDifferentCardPlayed.getKeyForWeakHashMap()));
 	}
 
 	@SuppressWarnings("unused")
