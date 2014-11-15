@@ -91,6 +91,9 @@ public class DoubleDummySolver {
 	}
 
 	public void examinePosition(Node node) {
+		if (node.isPruned()) {
+			return;
+		}
 		Deal position = game.duplicate();
 		position.playMoves(node.getMoves());
 
@@ -108,31 +111,26 @@ public class DoubleDummySolver {
 			visit(node);
 			return;
 		}
-		if (position.getCurrentTrick().isStart() && node != root) {
-			visit(node);
-		}
-		if (!node.isPruned()) {
-			if (shouldPruneCardsInSequence) {
-				for (Node move : node.children) {
-					//Remove played cards in current trick first
-					for (Card cardInThisTrick : position.getCurrentTrick().getCards()) {
-						currentDealKey &= ~(1L << cardInThisTrick.getIndex());
-					}
-					removeSiblingsInSequence(move);
+		if (shouldPruneCardsInSequence) {
+			for (Node move : node.children) {
+				//Remove played cards in current trick first
+				for (Card cardInThisTrick : position.getCurrentTrick().getCards()) {
+					currentDealKey &= ~(1L << cardInThisTrick.getIndex());
 				}
+				removeSiblingsInSequence(move);
 			}
-			if (!rootOnlyHasOneValidMove(node) || !terminateIfRootOnlyHasOneValidMove) {
-				for (Node move : node.children) {
-					if (move != null && !move.pruned) {
-						stack.push(move);
-					}
+		}
+		if (!rootOnlyHasOneValidMove(node) || !terminateIfRootOnlyHasOneValidMove) {
+			for (Node move : node.children) {
+				if (move != null && !move.pruned) {
+					stack.push(move);
 				}
 			}
 		}
 	}
 
 	private boolean rootOnlyHasOneValidMove(Node node) {
-		if (node == root && node.getUnprunedChildCount() == 1) {
+		if (node == root && node.isSingleton()) {
 			return true;
 		} else {
 			return false;
@@ -196,6 +194,9 @@ public class DoubleDummySolver {
 		node.calculateValue();
 		for (PruningStrategy pruningStrategy : postEvaluationPruningStrategies) {
 			pruningStrategy.prune(node);
+		}
+		if (node.isLast()) {
+			visit(node.parent);
 		}
 		node.visited = true;
 	}
