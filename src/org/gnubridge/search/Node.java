@@ -97,13 +97,24 @@ public class Node {
 			return this;
 		}
 		int max = getTricksTaken(getOtherPair());
+		Node lowest = null;
 		for (Node move : children) {
 			if (move != null && !move.pruned
 					&& move.getTricksTaken(getOtherPair()) == max) {
-				return move;
+				if (lowest == null) {
+					lowest = move;
+				} else {
+					Card lowCard = lowest.getCardPlayed();
+					Card curCard = move.getCardPlayed();
+					if (lowCard.trumps(curCard, position.getTrump())) {
+						lowest = move;
+					} else if (curCard.hasSameColorAs(lowCard) && !curCard.hasGreaterValueThan(lowCard)) {
+						lowest = move;
+					}
+				}
 			}
 		}
-		return null;
+		return lowest;
 	}
 
 	public void printOptimalPath(Deal g) {
@@ -390,11 +401,24 @@ public class Node {
 		}
 		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
+		//shallow pruning
 		for (Node node : grandParent.children) {
-			if (!node.equals(parent) && node.valueSet()) {
+			if (!node.pruned && !node.equals(parent) && node.valueSet()) {
 				if (node.getTricksTaken(maxPlayer) <= tricks) {
 					parent.pruneAsAlpha();
 					return;
+				}
+			}
+		}
+		//deep pruning
+		if (!grandParent.isRoot() && !grandParent.parent.isRoot()) {
+			Node ancestor = grandParent.parent.parent;
+			for (Node node : ancestor.children) {
+				if (!node.pruned && !node.equals(grandParent.parent) && node.valueSet()) {
+					if (node.getTricksTaken(maxPlayer) <= tricks) {
+						parent.pruneAsAlpha();
+						return;
+					}
 				}
 			}
 		}
@@ -409,11 +433,24 @@ public class Node {
 		}
 		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
 		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
+		//shallow pruning
 		for (Node node : grandParent.children) {
-			if (!node.equals(parent) && node.valueSet()) {
+			if (!node.pruned && !node.equals(parent) && node.valueSet()) {
 				if (node.getTricksTaken(maxPlayer) >= tricks) {
 					parent.pruneAsBeta();
 					return;
+				}
+			}
+		}
+		//deep pruning
+		if (!grandParent.isRoot() && !grandParent.parent.isRoot()) {
+			Node ancestor = grandParent.parent.parent;
+			for (Node node : ancestor.children) {
+				if (!node.pruned && !node.equals(grandParent.parent) && node.valueSet()) {
+					if (node.getTricksTaken(maxPlayer) >= tricks) {
+						parent.pruneAsAlpha();
+						return;
+					}
 				}
 			}
 		}
