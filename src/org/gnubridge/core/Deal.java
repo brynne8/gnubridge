@@ -310,8 +310,4 @@ public class Deal {
 		return getTricksTaken(Player.NORTH_SOUTH);
 	}
 
-	public List<Card> getPossibleMoves() {
-		return getNextToPlay().getPossibleMoves(currentTrick);
-	}
-
 }

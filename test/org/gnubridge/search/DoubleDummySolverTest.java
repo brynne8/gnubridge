@@ -320,7 +320,7 @@ public class DoubleDummySolverTest extends TestCase {
 		game.setNextToPlay(Direction.NORTH_DEPRECATED);
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertEquals(Player.NORTH_SOUTH, s.getRoot().getCurrentPair());
+		assertEquals(Player.NORTH_SOUTH, s.getRoot().getOtherPair());
 		assertEquals(1, s.getRoot().getTricksTaken(Player.NORTH_SOUTH));
 
 	}
@@ -570,11 +570,10 @@ public class DoubleDummySolverTest extends TestCase {
 		game.getPlayer(Direction.NORTH_DEPRECATED).init(new Card[] { Seven.of(Spades.i()), Queen.of(Hearts.i()) });
 		game.getPlayer(Direction.EAST_DEPRECATED).init(new Card[] { Three.of(Clubs.i()), Three.of(Hearts.i()) });
 		game.getPlayer(Direction.SOUTH_DEPRECATED).init(new Card[] { Four.of(Clubs.i()), Two.of(Spades.i()) });
-		game.doNextCard(0);
+		game.doNextCard();
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertEquals(1, s.getBestMoves().size());
-		assertEquals(Queen.of(Hearts.i()), s.getBestMoves().get(0));
+		assertEquals(Queen.of(Hearts.i()), s.getBestCard());
 
 		// triangulate
 		Deal game2 = new Deal(NoTrump.i());
@@ -583,11 +582,10 @@ public class DoubleDummySolverTest extends TestCase {
 		// order
 		game2.getPlayer(Direction.EAST_DEPRECATED).init(new Card[] { Three.of(Clubs.i()), Three.of(Hearts.i()) });
 		game2.getPlayer(Direction.SOUTH_DEPRECATED).init(new Card[] { Four.of(Clubs.i()), Two.of(Spades.i()) });
-		game2.doNextCard(0);
+		game2.doNextCard();
 		DoubleDummySolver s2 = new DoubleDummySolver(game2);
 		s2.search();
-		assertEquals(1, s2.getBestMoves().size());
-		assertEquals(Queen.of(Hearts.i()), s2.getBestMoves().get(0));
+		assertEquals(Queen.of(Hearts.i()), s2.getBestCard());
 	}
 
 	public void testNorthTrumps() {
@@ -601,8 +599,7 @@ public class DoubleDummySolverTest extends TestCase {
 		s.search();
 		s.printStats();
 		s.printOptimalPath();
-		assertEquals(1, s.getBestMoves().size());
-		assertEquals(Two.of(Spades.i()), s.getBestMoves().get(0));
+		assertEquals(Two.of(Spades.i()), s.getBestCard());
 
 		Deal game2 = new Deal(Spades.i());
 		game2.getPlayer(Direction.WEST_DEPRECATED).init(new Card[] { Nine.of(Clubs.i()), Four.of(Spades.i()) });
@@ -610,11 +607,10 @@ public class DoubleDummySolverTest extends TestCase {
 		// reverted
 		game2.getPlayer(Direction.EAST_DEPRECATED).init(new Card[] { Three.of(Clubs.i()), Three.of(Diamonds.i()) });
 		game2.getPlayer(Direction.SOUTH_DEPRECATED).init(new Card[] { Six.of(Clubs.i()), Five.of(Diamonds.i()) });
-		game2.doNextCard(0);
+		game2.doNextCard();
 		DoubleDummySolver s2 = new DoubleDummySolver(game2);
 		s2.search();
-		assertEquals(1, s2.getBestMoves().size());
-		assertEquals(Two.of(Spades.i()), s2.getBestMoves().get(0));
+		assertEquals(Two.of(Spades.i()), s2.getBestCard());
 
 	}
 
@@ -624,11 +620,10 @@ public class DoubleDummySolverTest extends TestCase {
 		game.getPlayer(Direction.NORTH_DEPRECATED).init(new Card[] { Two.of(Spades.i()), Two.of(Clubs.i()) });
 		game.getPlayer(Direction.EAST_DEPRECATED).init(new Card[] { Three.of(Diamonds.i()), Three.of(Hearts.i()) });
 		game.getPlayer(Direction.SOUTH_DEPRECATED).init(new Card[] { Six.of(Diamonds.i()), Five.of(Hearts.i()) });
-		game.doNextCard(0);
+		game.doNextCard();
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertEquals(1, s.getBestMoves().size());
-		assertEquals(Two.of(Clubs.i()), s.getBestMoves().get(0));
+		assertEquals(Two.of(Clubs.i()), s.getBestCard());
 	}
 
 	public void testBestMoveForOneTrick() {
@@ -640,8 +635,7 @@ public class DoubleDummySolverTest extends TestCase {
 		game.setNextToPlay(Direction.SOUTH_DEPRECATED);
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertNotNull(s.getBestMoves());
-		assertEquals(1, s.getBestMoves().size());
+		assertNotNull(s.getBestCard());
 	}
 
 	public void testBestMoveForOneTrickRootDidNotStartTrick() {
@@ -651,11 +645,10 @@ public class DoubleDummySolverTest extends TestCase {
 		game.getPlayer(Direction.SOUTH_DEPRECATED).init(new String[] { "A" });
 		game.getPlayer(Direction.EAST_DEPRECATED).init(new String[] { "K" });
 		game.setNextToPlay(Direction.SOUTH_DEPRECATED);
-		game.doNextCard(0);
+		game.doNextCard();
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertNotNull(s.getBestMoves());
-		assertEquals(1, s.getBestMoves().size());
+		assertNotNull(s.getBestCard());
 	}
 
 	public void testIfCannotBeatPlayLowestToColorPruningNoConflictWithSequencePruning() {

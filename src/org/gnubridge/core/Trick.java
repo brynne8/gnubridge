@@ -32,15 +32,6 @@ public class Trick {
 		players.add(p);
 	}
 	
-	/* Simple try to add and remove cards */
-	public void tryAdd(Card card) {
-		cards.add(card);
-	}
-	
-	public void tryRemove() {
-		cards.remove(cards.size() - 1);
-	}
-	
 	public boolean isStart() {
 		return cards.size() == 0;
 	}

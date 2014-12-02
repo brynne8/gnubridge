@@ -1,7 +1,7 @@
 package org.gnubridge.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.gnubridge.core.deck.Suit;
@@ -20,7 +20,7 @@ public class Player {
 	private final List<Trick> tricks;
 
 	public Player(int i) {
-		hand = new ArrayList<Card>();
+		hand = new LinkedList<Card>();
 		played = new ArrayList<Card>();
 		tricks = new ArrayList<Trick>();
 		direction = i;
@@ -100,10 +100,6 @@ public class Player {
 		return direction;
 	}
 
-	public void play(Trick trick) {
-		play(getPossibleMoves(trick).get(0));
-	}
-
 	public boolean hasPlayedCard(Card c) {
 		return contains(played, c);
 	}
@@ -125,16 +121,10 @@ public class Player {
 			}
 		}
 		if (matching.size() == 0) {
-			return orderLowToHigh(hand);
+			return hand;
 		} else {
-			return orderLowToHigh(matching);
+			return matching;
 		}
-	}
-
-	private List<Card> orderLowToHigh(List<Card> cards) {
-		List<Card> result = new Hand(cards).getCardsHighToLow();
-		Collections.reverse(result);
-		return result;
 	}
 
 	public void play(Card c) {
