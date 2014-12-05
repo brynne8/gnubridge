@@ -100,9 +100,6 @@ public class DoubleDummySolver {
 		Player player = position.getNextToPlay();
 		node.setPlayerTurn(player.getDirection());
 		node.setPosition(position);
-		for (Card card : player.getPossibleMoves(position.getCurrentTrick())) {
-			makeChildNodeForCardPlayed(node, player, card);
-		}
 
 		currentDealKey = position.getKeyForWeakHashMap();
 		checkDuplicatePositions(node, position);
@@ -110,6 +107,9 @@ public class DoubleDummySolver {
 			node.setLeaf(true);
 			visit(node);
 			return;
+		}
+		for (Card card : player.getPossibleMoves(position.getCurrentTrick())) {
+			makeChildNodeForCardPlayed(node, player, card);
 		}
 		if (shouldPruneCardsInSequence) {
 			for (Node move : node.children) {

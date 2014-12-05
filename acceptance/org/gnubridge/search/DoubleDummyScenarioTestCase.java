@@ -49,7 +49,7 @@ public abstract class DoubleDummyScenarioTestCase extends TestCase {
 	protected void shouldWinTricks(int expectedMaxPlayerTricks) {
 		solve();
 		assertEquals("tricks won by leading pair", expectedMaxPlayerTricks,
-				solver.getRoot().getTricksTaken(solver.getRoot().getOtherPair()));
+				solver.getRoot().getTricksTaken(solver.getRoot().getCurrentPair()));
 
 	}
 

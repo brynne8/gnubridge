@@ -10,21 +10,21 @@ import org.gnubridge.core.Trick;
 
 public class Node {
 	// Static values
-	public static final byte UNITNITIALIZED = -1;
-	public static final byte ALPHA_UNINIT   = -1;
-	public static final byte BETA_UNINIT    = 14;
-	public static final byte AB_UNINIT      = -2;
+	public static final byte UNINITIALIZED = -1;
+	public static final byte ALPHA_UNINIT  = -1;
+	public static final byte BETA_UNINIT   = 14;
+	public static final byte AB_UNINIT     = -2;
 
 	public static enum PruneType {
-		NO_PRUNE, PRUNE_ALPHA, PRUNE_BETA, PRUNE_SEQUENCE_SIBLINGS,
-		PRUNE_SEQUENCE_SIBLINGS_PLAYED, PRUNE_DUPLICATE_POSITION
+		NO_PRUNE, PRUNE_ALPHA, PRUNE_BETA, 
+		PRUNE_SEQUENCE_SIBLINGS, PRUNE_DUPLICATE_POSITION
 	}
 
 	//Data of the node
 	private Deal         position;                   //Current position
 	        Node         parent;                     //Parent node
 	        List<Node>   children;                   //ArrayList of child nodes
-	        int          alphaBeta;                  //Local alpha or beta value
+	        byte         alphaBeta;                  //Local alpha or beta value
 	private byte         playerTurn;                 //The player to play
 	private final byte[] tricksTaken = new byte[2];  //Tricks WE|NS
 	private Card         cardPlayed;                 //The card played on this node
@@ -45,8 +45,8 @@ public class Node {
 			parent.children.add(this);
 		}
 		alphaBeta = AB_UNINIT;
-		tricksTaken[Player.WEST_EAST] = UNITNITIALIZED;
-		tricksTaken[Player.NORTH_SOUTH] = UNITNITIALIZED;
+		tricksTaken[Player.WEST_EAST] = UNINITIALIZED;
+		tricksTaken[Player.NORTH_SOUTH] = UNINITIALIZED;
 	}
 
 	public Node(Node parent, int playerTurn) {
@@ -99,20 +99,23 @@ public class Node {
 		if (children.size() == 0) {
 			return this;
 		}
-		int max = getTricksTaken(getOtherPair());
+		int max = getTricksTaken(getCurrentPair());
 		Node lowest = null;
 		for (Node move : children) {
-			if (move != null && !move.pruned
-					&& move.getTricksTaken(getOtherPair()) == max) {
-				if (lowest == null) {
-					lowest = move;
-				} else {
-					Card lowCard = lowest.getCardPlayed();
-					Card curCard = move.getCardPlayed();
-					if (lowCard.trumps(curCard, position.getTrump())) {
+			if (move != null && !move.pruned) {
+				int tricksTaken = move.getTricksTaken(getCurrentPair());
+				if (tricksTaken >= max) {
+					if (lowest == null || tricksTaken > max) {
 						lowest = move;
-					} else if (!curCard.hasGreaterValueThan(lowCard)) {
-						lowest = move;
+						max = tricksTaken;
+					} else {
+						Card lowCard = lowest.getCardPlayed();
+						Card curCard = move.getCardPlayed();
+						if (lowCard.trumps(curCard, position.getTrump())) {
+							lowest = move;
+						} else if (!curCard.hasGreaterValueThan(lowCard)) {
+							lowest = move;
+						}
 					}
 				}
 			}
@@ -166,7 +169,6 @@ public class Node {
 		case PRUNE_BETA: result = "BETA"; break;
 		case PRUNE_DUPLICATE_POSITION: result = "DUPLICATE POSITION"; break;
 		case PRUNE_SEQUENCE_SIBLINGS: result = "SIBLING SEQUENCE"; break;
-		case PRUNE_SEQUENCE_SIBLINGS_PLAYED: result = "SIBLING IN PLAYED SEQUENCE"; break;
 		default: result = "UNKNOWN";
 		}
 		return result;
@@ -181,6 +183,7 @@ public class Node {
 		this.pruneType = type;
 	}
 
+	/** 'isPruned()' is not pruned, it is a recursive method */
 	public boolean isPruned() {
 		if (isRoot()) {
 			return pruned;
@@ -230,7 +233,7 @@ public class Node {
 	}
 
 	private int getMaxPlayer() {
-		return getRoot().getOtherPair();
+		return getRoot().getCurrentPair();
 	}
 
 	@Override
@@ -254,16 +257,12 @@ public class Node {
 		return result;
 	}
 
-	public boolean isPlayedSequencePruned() {
-		return pruned && (getPruneType() == PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
-	}
-
 	public String toDebugString() {
 		String result = "";
 		result += "Node: " + parent.getMyIndex(this) + ", " + cardPlayed + "\n";
 		result += "pruned? " + isPruned() + "\n";
 		result += "   alpha/beta: " + isAlphaPruned() + "/" + isBetaPruned() + "\n";
-		result += "   sequence/played sequence: " + isSequencePruned() + "/" + isPlayedSequencePruned() + "\n";
+		result += "   sequence/played sequence: " + isSequencePruned() + "\n";
 
 		return result;
 	}
@@ -307,35 +306,22 @@ public class Node {
 		}
 	}
 
-	Node getTricksForCurrentPair() {
-		Node theChild = null;
-		if (isAlpha() || isRoot()) {
-			for (Node child : children) {
-				if (child != null
-						&& !child.pruned && child.valueSet()
-						&& (theChild == null || child.getTricksTaken(getCurrentPair()) < theChild
-								.getTricksTaken(getCurrentPair()))) {
-					theChild = child;
-				}
-			}
-		} else {
-			for (Node child : children) {
-				if (child != null
-						&& !child.pruned && child.valueSet()
-						&& (theChild == null || child.getTricksTaken(getCurrentPair()) > theChild
-								.getTricksTaken(getCurrentPair()))) {
-					theChild = child;
-				}
+	public void calculateValueFromChild() {
+		int average    = 0;
+		int childCount = 0;
+		int maxPlayer = getMaxPlayer();
+		for (Node child : children) {
+			if (child != null && !child.pruned && child.valueSet()) {
+				childCount++;
+				average += child.getTricksTaken(maxPlayer);
 			}
 		}
-		return theChild;
-	}
-
-	public void calculateValueFromChild() {
-		Node maxChild = getTricksForCurrentPair();
-		if (maxChild != null) {
-			setTricksTaken(Player.WEST_EAST, maxChild.getTricksTaken(Player.WEST_EAST));
-			setTricksTaken(Player.NORTH_SOUTH, maxChild.getTricksTaken(Player.NORTH_SOUTH));
+		if (childCount != 0) {
+			average = (average + childCount / 2) / childCount;
+			setTricksTaken(maxPlayer, average);
+			setTricksTaken((maxPlayer + 1) % 2, 13 - average);
+		} else {
+			setPruned(true, PruneType.NO_PRUNE);
 		}
 	}
 
@@ -385,7 +371,7 @@ public class Node {
 
 	/** Parent should be pruned among its siblings */
 	public void canApplyAlphaBeta() {
-		if (valueSet() && !isRoot()) {
+		if (!isPruned() && valueSet() && !isRoot()) {
 			if (isAlpha()) {
 				alphaPrune();
 			} else {
@@ -398,13 +384,10 @@ public class Node {
 		int maxPlayer = getMaxPlayer();
 		int tricks    = getTricksTaken(maxPlayer);
 
-		if (parent.alphaBeta == AB_UNINIT) {
-			parent.alphaBeta = BETA_UNINIT;
-		}
-		if (parent.alphaBeta <= tricks) {
-			parent.pruneAsAlpha();
+		if (parent.valueSet() && tricks <= parent.getTricksTaken(maxPlayer)) {
 			return;
 		}
+
 		int  times    = 0;
 		Node betaNode = this;
 		do {
@@ -415,35 +398,36 @@ public class Node {
 			if (betaNode.isAlpha()) {
 				continue;
 			}
+			if (betaNode.alphaBeta == AB_UNINIT) {
+				betaNode.alphaBeta = BETA_UNINIT;
+			}
 			for (Node node : betaNode.parent.children) {
 				if (!node.pruned && node != betaNode && node.valueSet()) {
 					int tricksTaken = node.getTricksTaken(maxPlayer);
-					if (tricksTaken < parent.alphaBeta) {
+					if (tricksTaken < betaNode.alphaBeta) {
 						if (tricksTaken <= tricks) {
 							parent.pruneAsAlpha();
 							return;
 						}
-						parent.alphaBeta = tricksTaken;
-						return;
+						betaNode.alphaBeta = (byte) tricksTaken;
 					}
 				}
 			}
 			times++;
 		} while (times != 2);
+		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
+		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
 	}
 
 	private void betaPrune() {
 		int maxPlayer = getMaxPlayer();
 		int tricks    = getTricksTaken(maxPlayer);
 
-		if (parent.alphaBeta == AB_UNINIT) {
-			parent.alphaBeta = ALPHA_UNINIT;
-		}
-		if (parent.alphaBeta >= tricks) {
-			parent.pruneAsBeta();
+		if (parent.valueSet() && tricks >= parent.getTricksTaken(maxPlayer)) {
 			return;
 		}
-		int  times    = 0;
+
+		int  times     = 0;
 		Node alphaNode = this;
 		do {
 			alphaNode = alphaNode.parent;
@@ -453,21 +437,25 @@ public class Node {
 			if (alphaNode.isBeta()) {
 				continue;
 			}
+			if (alphaNode.alphaBeta == AB_UNINIT) {
+				alphaNode.alphaBeta = ALPHA_UNINIT;
+			}
 			for (Node node : alphaNode.parent.children) {
 				if (!node.pruned && node != alphaNode && node.valueSet()) {
 					int tricksTaken = node.getTricksTaken(maxPlayer);
-					if (tricksTaken > parent.alphaBeta) {
+					if (tricksTaken > alphaNode.alphaBeta) {
 						if (tricksTaken >= tricks) {
 							parent.pruneAsBeta();
 							return;
 						}
-						parent.alphaBeta = tricksTaken;
-						return;
+						alphaNode.alphaBeta = (byte) tricksTaken;
 					}
 				}
 			}
 			times++;
 		} while (times != 2);
+		parent.setTricksTaken(Player.WEST_EAST, getTricksTaken(Player.WEST_EAST));
+		parent.setTricksTaken(Player.NORTH_SOUTH, getTricksTaken(Player.NORTH_SOUTH));
 	}
 
 	@Deprecated
@@ -494,10 +482,6 @@ public class Node {
 
 	public void pruneAsSequenceSibling() {
 		setPruned(true, PruneType.PRUNE_SEQUENCE_SIBLINGS);
-	}
-
-	public void pruneAsSequenceSiblingPlayed() {
-		setPruned(true, PruneType.PRUNE_SEQUENCE_SIBLINGS_PLAYED);
 	}
 
 	public void pruneAsDuplicatePosition() {
@@ -558,13 +542,6 @@ public class Node {
 	}
 
 	public int getCurrentPair() {
-		if (isRoot()) {
-			return getOtherPair() == 0 ? 1 : 0;
-		}
-		return Player.matchPair(playerCardPlayed.pair());
-	}
-
-	public int getOtherPair() {
 		return Player.matchPair(getPlayerTurn());
 	}
 

@@ -320,7 +320,7 @@ public class DoubleDummySolverTest extends TestCase {
 		game.setNextToPlay(Direction.NORTH_DEPRECATED);
 		DoubleDummySolver s = new DoubleDummySolver(game);
 		s.search();
-		assertEquals(Player.NORTH_SOUTH, s.getRoot().getOtherPair());
+		assertEquals(Player.NORTH_SOUTH, s.getRoot().getCurrentPair());
 		assertEquals(1, s.getRoot().getTricksTaken(Player.NORTH_SOUTH));
 
 	}

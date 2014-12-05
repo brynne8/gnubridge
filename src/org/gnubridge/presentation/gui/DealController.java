@@ -98,6 +98,7 @@ public class DealController implements CardPlayedListener {
 			search = new DoubleDummySolver(game);
 			search.setMaxTricks(maxTricksSearchDepth);
 			search.search();
+			//System.out.println(search.getRoot().printAsTree());
 			return search.getBestCard();
 		}
 	}
