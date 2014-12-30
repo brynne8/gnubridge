@@ -62,6 +62,8 @@ public class DealController implements CardPlayedListener {
 					System.out.println("// could not complete full search of depth " + tricksSearchDepth
 							+ ", current best: " + bestMove);
 					break;
+				} catch (NullPointerException e) {
+					System.out.println("// no available result in this level");
 				}
 			}
 			start = COMPUTER_PLAYER_FINISHED_THINKING;
