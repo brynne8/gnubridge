@@ -31,7 +31,7 @@ public class RespondTakeoutDouble extends BiddingRule {
 		Bid partnersBid = auction.getPartnersLastCall().getBid();
 		if (auction.isOvercall(partnersBid) && partnersBid.isDouble()) {
 			lastBid = auction.enemyCallBeforePartner(null).getBid();
-			if (!lastBid.getTrump().isNoTrump()) {
+			if (lastBid.getValue() < 4 && !lastBid.getTrump().isNoTrump()) {
 				return true;
 			}
 		}

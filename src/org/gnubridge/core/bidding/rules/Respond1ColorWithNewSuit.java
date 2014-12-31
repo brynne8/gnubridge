@@ -76,7 +76,8 @@ public class Respond1ColorWithNewSuit extends Response {
 	private Suit findHighestColorWithFourOrMoreCards() {
 		Suit longer = null;
 		for (Suit color : Suit.list) {
-			if (hand.getSuitLength(color) >= 4 && hand.AisStronger(color, longer)
+			if (hand.getSuitLength(color) >= 4
+					&& hand.AisStronger(color, longer)
 					&& !color.equals(partnersOpeningBid.getTrump())) {
 				longer = color;
 			}
@@ -90,6 +91,9 @@ public class Respond1ColorWithNewSuit extends Response {
 			if (color.isLowerRankThan(partnersOpeningBid.getTrump()) && hand.AisStronger(color, longer)) {
 				longer = color;
 			}
+		}
+		if (longer == null) {
+			return null;
 		}
 		int length = hand.getSuitLength(longer);
 		if (length < 4 || (length == 4 && !partnersOpeningBid.getTrump().equals(Diamonds.i()))) {

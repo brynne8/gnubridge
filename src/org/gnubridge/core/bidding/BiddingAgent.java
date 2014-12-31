@@ -11,6 +11,7 @@ import org.gnubridge.core.bidding.rules.Open1NT;
 import org.gnubridge.core.bidding.rules.Open2NT;
 import org.gnubridge.core.bidding.rules.Overcall1NT;
 import org.gnubridge.core.bidding.rules.OvercallSuit;
+import org.gnubridge.core.bidding.rules.PRebidAfter1NT;
 import org.gnubridge.core.bidding.rules.PRebidWeakTwo;
 import org.gnubridge.core.bidding.rules.PreemptiveBid;
 import org.gnubridge.core.bidding.rules.Rebid1ColorOriginalSuit;
@@ -50,6 +51,7 @@ public class BiddingAgent {
 
 	public BiddingAgent(Auctioneer a, Hand h) {
 		rules = new ArrayList<BiddingRule>();
+		//Opening
 		rules.add(new Strong2C(a, h));
 		rules.add(new Open2NT(a, h));
 		rules.add(new Open1NT(a, h));
@@ -59,6 +61,7 @@ public class BiddingAgent {
 		rules.add(new TakeoutDouble(a, h));
 		rules.add(new PreemptiveBid(a, h));
 		rules.add(new WeakTwo(a, h));
+		//Response
 		rules.add(new RespondPreemptiveBid(a, h));
 		rules.add(new RespondWeakTwo(a, h));
 		rules.add(new RespondOvercallSuit(a, h));
@@ -70,6 +73,7 @@ public class BiddingAgent {
 		rules.add(new Respond1ColorWithNewSuit(a, h));
 		rules.add(new Respond1ColorRaiseMinorSuit(a, h));
 		rules.add(new Respond1ColorWithNT(a, h));
+		//Rebid
 		rules.add(new RebidWeakTwo(a, h));
 		rules.add(new RebidTakeoutDouble(a, h));
 		rules.add(new Rebid2C(a, h));
@@ -82,11 +86,14 @@ public class BiddingAgent {
 		rules.add(new Rebid1ColorWithNewSuit(a, h));
 		rules.add(new Rebid1ColorOriginalSuit(a, h));
 		rules.add(new RebidAfter1NT(a, h));
+		//Partner's Rebid
 		rules.add(new PRebidWeakTwo(a, h));
 		rules.add(new RebidStayman(a, h));
 		rules.add(new RebidJacobyTransfer(a, h));
 		rules.add(new RebidMinorSuitStayman(a, h));
 		rules.add(new RebidForcing1NT(a, h));
+		rules.add(new PRebidAfter1NT(a, h));
+		//Default Pass
 		rules.add(new AlwaysPass());
 	}
 

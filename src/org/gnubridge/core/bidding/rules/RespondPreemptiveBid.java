@@ -16,9 +16,10 @@ public class RespondPreemptiveBid extends Response {
 
 	@Override
 	protected boolean applies() {
-		if (super.applies() && (auction.isOpening(partnersOpeningBid) ||
-				auction.isOvercall(partnersOpeningBid))) {
-			return  partnersOpeningBid.getValue() == 3 && partnersOpeningBid.getTrump().isSuit()
+		if (super.applies() && (auction.isOpening(partnersOpeningBid) || 
+				(auction.isOvercall(partnersOpeningBid)
+						&& auction.enemyCallBeforePartner(null).getBid().is1Suit()))) {
+			return partnersOpeningBid.getValue() == 3 && partnersOpeningBid.getTrump().isSuit()
 					&& hand.getSuitLength(partnersOpeningBid.getTrump().asSuit()) != 0;
 		}
 		return false;
