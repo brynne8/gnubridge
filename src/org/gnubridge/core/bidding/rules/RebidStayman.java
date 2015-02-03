@@ -7,6 +7,7 @@ import org.gnubridge.core.bidding.PointCalculator;
 import org.gnubridge.core.deck.Clubs;
 import org.gnubridge.core.deck.Diamonds;
 import org.gnubridge.core.deck.Hearts;
+import org.gnubridge.core.deck.NoTrump;
 import org.gnubridge.core.deck.Spades;
 import org.gnubridge.core.deck.Trump;
 
@@ -37,13 +38,23 @@ public class RebidStayman extends PRebidNoTrump {
 				return new Bid(level + 1, Spades.i());
 			}
 			if (level == 1) {
-				if (hearts == 5 && spades == 5) {
-					if (points >= 8 && points <= 9) {
-						return new Bid(3, Hearts.i());
-					} else if (points >= 10) {
+				if (points >= 10) {
+					if (hearts >= 5 && spades >= 5) {
 						return new Bid(3, Spades.i());
+					} else if (hand.getSuitLength(Clubs.i()) >= 5) {
+						return new Bid(3, Clubs.i());
+					} else if (hand.getSuitLength(Diamonds.i()) >= 5) {
+						return new Bid(3, Diamonds.i());
+					} else if (pc.isSemiBalanced()) {
+						return new Bid(3, NoTrump.i());
 					}
-				} 
+				} else {
+					if (hearts >= 5 && spades >= 5) {
+						return new Bid(3, Hearts.i());
+					} else {
+						return new Bid(2, NoTrump.i());
+					}
+				}
 			}
 		} else if (trump.isMajorSuit()) {
 			if (trump.equals(Hearts.i())) {
